@@ -32,7 +32,6 @@
   --signal: #ffd23f;      /* Annotation yellow */
   --box: #2d3fe0;         /* Detector colour on page sections */
   --box-ink: #ffffff;
-  --halo: rgba(255, 255, 255, 0.16);
   --shadow: 0 1.875rem 3.75rem -1.875rem rgba(20, 33, 61, 0.45);
 }
 
@@ -48,7 +47,6 @@
   --signal: #ffd23f;
   --box: #ffd23f;
   --box-ink: #14213d;
-  --halo: rgba(140, 155, 255, 0.12);
   --shadow: 0 1.875rem 3.75rem -1.875rem rgba(0, 0, 0, 0.8);
 }
 
@@ -379,32 +377,36 @@ html.js .view:not(.is-active) { display: none; }
   .hint-touch { display: inline; }
 }
 
-/* Portrait blended into the scene: full colour, edges fading into the pixel art over a soft glass halo */
+/* Portrait as an 8-bit framed picture hanging on the castle tower (the tower is drawn around it in script.js).
+   Frame sizes stay in px so the pixel bevel stays crisp. */
 .portrait {
   position: relative;
-  width: min(100%, 22rem);
+  width: min(100%, 15rem);
   aspect-ratio: 4 / 5;
   justify-self: end;
+  padding: 4px;
+  background: #5c3a0a;
+  border: 6px solid;
+  border-color: #f6d365 #b37a14 #b37a14 #f6d365;
+  box-shadow: 0 0 0 3px #2a1a05, 8px 8px 0 3px rgba(10, 14, 40, 0.45);
 }
+/* The nail it hangs from */
 .portrait::before {
   content: '';
   position: absolute;
-  inset: -6%;
-  z-index: -1;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, var(--halo), transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent);
-  mask-image: radial-gradient(closest-side, #000 55%, transparent);
+  left: 50%;
+  top: -22px;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  background: #2a1a05;
+  box-shadow: -6px 6px 0 #2a1a05, 6px 6px 0 #2a1a05;
 }
 .portrait img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   filter: saturate(1.12) contrast(1.04);
-  -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
-  mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
 }
 .portrait-fallback {
   position: absolute;
@@ -1205,7 +1207,7 @@ html.js .cv-lock::after  { animation: ctaTag 4s var(--ease-out) 2.4s both; }
   .view:not(.view-split) { display: flex; flex-direction: column; }
   .view > .section, .hero, .contact { flex: 1; min-height: 0; }
   .hero, .contact { min-height: 100%; }
-  .portrait { width: auto; height: min(58vh, 28rem); }
+  .portrait { width: auto; height: min(44vh, 20rem); }
 
   /* Lab: arena takes the height that's left */
   .lab-card { flex: 1; min-height: 0; }
@@ -1239,7 +1241,8 @@ html.js .cv-lock::after  { animation: ctaTag 4s var(--ease-out) 2.4s both; }
     grid-template-columns: 1fr;
     align-items: start;
   }
-  .portrait { justify-self: start; width: min(50%, 16rem); order: -1; }
+  /* Room above the frame for the tower's battlements */
+  .portrait { justify-self: start; width: min(44%, 12rem); margin: 4.5rem 0 0 1.25rem; order: -1; }
   .section-head { grid-template-columns: 1fr; }
   .section-intro { justify-self: start; }
   .view-split { display: block; }

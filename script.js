@@ -196,6 +196,12 @@ function initViews() {
       if (t.dataset.tab === view.id) t.setAttribute("aria-current", "page");
       else t.removeAttribute("aria-current");
     });
+    const current = document.querySelector(`[data-tab="${view.id}"]`);
+    const bar = current && current.parentElement;
+    if (bar && bar.scrollWidth > bar.clientWidth) {
+      const offset = current.getBoundingClientRect().left - bar.getBoundingClientRect().left;
+      bar.scrollTo({ left: bar.scrollLeft + offset - (bar.clientWidth - current.offsetWidth) / 2, behavior: "smooth" });
+    }
 
     view.scrollTop = 0;
     if (target && target !== view) target.scrollIntoView({ behavior: "instant", block: "nearest" });
@@ -1097,23 +1103,28 @@ function initHeroScene() {
     const hr = hero.getBoundingClientRect();
     const pr = portrait ? portrait.getBoundingClientRect() : null;
 
-    // Desktop: castle stands behind the portrait, rising above it and peeking out on the left
-    // without reaching the text. Phone: castle stands beside the portrait.
-    const CW = narrow ? 30 : 40;
-    const hz = narrow && pr ? Math.round((pr.bottom - hr.top) / P) : Math.round(H * 0.68);
-    const by = hz + 5;
-    let cx = W - CW - 3;
-    let CH = Math.round(Math.min(Math.max(hz * 0.62, 34), 72));
-    if (!narrow && pr) {
-      const textRight = Math.max(0, ...Array.from(hero.querySelectorAll(".hero-lede, .hero-facts, .hero-name"), (el) => el.getBoundingClientRect().right));
-      cx = Math.max(Math.ceil((textRight - hr.left) / P) + 2, Math.round((pr.left - hr.left) / P) - 14);
-      CH = Math.min(by - 8, Math.max(CH, by - (Math.round((pr.top - hr.top) / P) - 26)));
+    // The framed portrait hangs on the castle tower: the tower is built around the frame,
+    // with battlements above it and wall below it down to the rocks
+    const M = 5;
+    let cx, CW, ty, by;
+    const hz = narrow && pr ? Math.ceil((pr.bottom - hr.top) / P) + 6 : Math.round(H * 0.68);
+    if (pr) {
+      const pt = Math.floor((pr.top - hr.top) / P);
+      cx = Math.floor((pr.left - hr.left) / P) - M;
+      CW = Math.ceil(pr.width / P) + M * 2;
+      ty = pt - 14;
+      by = Math.max(hz + 5, Math.ceil((pr.bottom - hr.top) / P) + 10);
+    } else {
+      CW = 40;
+      cx = W - CW - 3;
+      by = hz + 5;
+      ty = by - 60;
     }
-    const ty = by - CH;
+    const CH = by - ty;
     const brickH = 7;
     const bx = narrow ? 0 : Math.round(W * 0.48);
     const orbX = narrow ? Math.round(W * 0.8) : Math.round(W * 0.5);
-    const orbY = narrow ? Math.max(8, ty - 16) : Math.round(hz * 0.2);
+    const orbY = narrow ? Math.max(8, Math.round(hz * 0.2)) : Math.round(hz * 0.2);
 
     const back = layer();
     const g = back.getContext("2d");
@@ -1148,14 +1159,15 @@ function initHeroScene() {
     px(cx + CW, hz - 1, W - cx - CW, 1, c.wall[2]);
     for (let x = cx + CW + 3; x < W; x += 7) px(x, hz, 1, 3, c.wall[1]);
 
-    // Lower wing with its own battlements: behind the portrait on desktop, toward it on phones
+    // Lower wing with its own battlements, to the right of the tower when there's room for it
     const wingW = 18;
     const wingH = Math.round(CH * 0.42);
-    const wx = narrow ? cx - wingW : cx + CW;
-    px(wx, by - wingH, wingW, wingH, c.stone[narrow ? 1 : 2]);
-    px(wx, by - wingH, 1, wingH, c.stone[0]);
-    for (let x = wx; x < wx + wingW; x += 4) px(x, by - wingH - 2, 2, 2, c.stone[narrow ? 1 : 2]);
-    px(wx + 5, by - wingH + 5, 2, 3, c.window);
+    const wx = W - (cx + CW) >= wingW + 2 ? cx + CW : null;
+    if (wx !== null) {
+      px(wx, by - wingH, wingW, wingH, c.stone[2]);
+      for (let x = wx; x < wx + wingW; x += 4) px(x, by - wingH - 2, 2, 2, c.stone[2]);
+      px(wx + 7, by - wingH + 5, 2, 3, c.window);
+    }
 
     // Main tower: sunlit left face, shaded right face, flared base, stone texture
     for (let y = ty; y < by; y++) {
@@ -1177,8 +1189,8 @@ function initHeroScene() {
     const ledge = ty + Math.round(CH * 0.45);
     px(cx - 1, ledge, CW + 2, 1, c.stone[0]);
     for (let x = cx; x < cx + CW; x += 3) px(x, ledge + 1, 2, 1, c.stone[3]);
-    // Windows (lit at night)
-    const win = [[0.15, 7], [0.42, 7], [0.72, 7], [0.5, Math.round(CH * 0.6)]];
+    // Windows above the frame (lit at night)
+    const win = [[0.15, 7], [0.45, 7], [0.75, 7]];
     win.forEach(([fx, wy]) => {
       const wx = cx + Math.round(CW * fx);
       px(wx, ty + wy, 3, 3, c.window);
@@ -1190,10 +1202,11 @@ function initHeroScene() {
     });
 
     // Rocks piled in a band along the base, out to the right edge
-    const rockX = Math.min(cx, wx) - 4;
+    const rockX = cx - 6;
+    const rockY = Math.min(by, H - brickH - 2);
     for (let i = 0; i < Math.round((W - rockX) / 3); i++) {
       const rx = Math.round(rockX + rand() * (W - rockX));
-      const ry = Math.round(by - 1 + rand() * 5);
+      const ry = Math.round(rockY - 3 + rand() * 5);
       const rr = 2 + Math.round(rand() * 2);
       for (let dy = -rr; dy <= rr; dy++) {
         for (let dx = -rr - 1; dx <= rr + 1; dx++) {
@@ -1213,10 +1226,10 @@ function initHeroScene() {
     }
 
     // Street lamp in front of the castle
-    const lx = narrow ? cx - Math.round(wingW / 2) : cx + 5;
-    const lampTop = narrow ? ty + 4 : by - Math.round(CH * 0.45);
-    px(lx, lampTop, 1, by - lampTop, c.lamp);
-    px(lx - 1, by - 2, 3, 2, c.lamp);
+    const lx = narrow ? cx + CW + 5 : cx - 4;
+    const lampTop = ty + Math.round(CH * 0.35);
+    px(lx, lampTop, 1, rockY - lampTop, c.lamp);
+    px(lx - 1, rockY - 2, 3, 2, c.lamp);
     px(lx - 1, lampTop - 5, 3, 1, c.lamp);
     px(lx - 1, lampTop - 4, 3, 4, c.lamp);
     px(lx, lampTop - 3, 1, 2, c.lampLight);
@@ -1330,8 +1343,8 @@ function initHeroScene() {
     const x = (e.clientX - r.left) / P;
     const y = (e.clientY - r.top) / P;
     if (x >= boatX - 2 && x <= boatX + 16 && y >= L.hz - 7 && y <= L.hz + 3) return "ahoy";
-    const left = Math.min(L.cx, L.wx);
-    if (x >= left && x <= left + L.CW + L.wingW && y >= L.ty - 3 && y <= L.by) return "castle";
+    const right = L.wx === null ? L.cx + L.CW : L.wx + L.wingW;
+    if (x >= L.cx && x <= right && y >= L.ty - 3 && y <= L.by) return "castle";
     return null;
   }
   hero.addEventListener("click", (e) => {
