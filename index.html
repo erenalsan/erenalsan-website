@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en" class="dark" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eren Alsan &mdash; Software Engineer &amp; AI Engineering Student</title>
+  <meta name="description" content="Portfolio of Eren Alsan. M.Sc. Artificial Intelligence Engineering student at Passau University. Building local-first processing engines, autonomous systems, and data-driven software." />
+  <meta name="author" content="Eren Alsan" />
+
+  <!-- Google Typography: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Zero-Flicker Theme Guard -->
+  <script>
+    (function () {
+      const saved = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', saved);
+      if (saved === 'light') {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      }
+    })();
+  </script>
+</head>
+<body class="font-sans antialiased text-base selection:bg-amber-500/20">
+
+  <!-- NAVBAR -->
+  <header id="site-header" class="fixed top-0 left-0 right-0 z-40 transition-colors duration-200">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      
+      <!-- Monospace Monogram -->
+      <a href="#hero" class="brand-monogram font-mono font-medium text-sm tracking-tight flex items-center gap-1.5" aria-label="Eren Alsan Home">
+        <span class="text-accent">&lt;</span><span>ea</span><span class="text-accent">/&gt;</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-7 text-xs font-mono tracking-tight" aria-label="Primary Navigation">
+        <a href="#projects" class="nav-item">Projects</a>
+        <a href="#photography" class="nav-item">Photography</a>
+        <a href="#skills" class="nav-item">Skills</a>
+        <a href="#timeline" class="nav-item">Trajectory</a>
+        <a href="#discipline" class="nav-item">Discipline</a>
+        <a href="#contact" class="nav-item">Contact</a>
+
+        <!-- Dark/Light Theme Switcher -->
+        <button id="theme-toggle" class="theme-toggle-btn p-1.5 rounded transition-colors flex items-center justify-center cursor-pointer" aria-label="Toggle Dark and Light theme" title="Toggle theme">
+          <i data-lucide="sun" class="w-3.5 h-3.5 theme-sun-icon"></i>
+          <i data-lucide="moon" class="w-3.5 h-3.5 theme-moon-icon"></i>
+        </button>
+
+        <!-- Direct Resume Download -->
+        <a href="assets/Eren_Alsan_CV.pdf" download="Eren_Alsan_CV.pdf" class="btn-cv flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-mono font-medium transition-all" aria-label="Download CV as PDF">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span>Resume</span>
+        </a>
+      </nav>
+
+      <!-- Mobile Nav Buttons -->
+      <div class="flex items-center gap-2 md:hidden">
+        <button id="mobile-theme-toggle" class="theme-toggle-btn p-1.5 rounded transition-colors flex items-center justify-center cursor-pointer" aria-label="Toggle theme">
+          <i data-lucide="sun" class="w-4 h-4 theme-sun-icon"></i>
+          <i data-lucide="moon" class="w-4 h-4 theme-moon-icon"></i>
+        </button>
+        <button id="mobile-menu-btn" class="p-1.5 rounded menu-trigger flex items-center justify-center cursor-pointer" aria-label="Toggle Navigation Menu">
+          <i data-lucide="menu" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Panel -->
+    <div id="mobile-nav" class="mobile-menu-overlay hidden md:hidden border-b px-6 py-4 space-y-3 font-mono text-xs">
+      <a href="#projects" class="block py-1.5 mobile-nav-link">Projects</a>
+      <a href="#photography" class="block py-1.5 mobile-nav-link">Photography</a>
+      <a href="#skills" class="block py-1.5 mobile-nav-link">Skills</a>
+      <a href="#timeline" class="block py-1.5 mobile-nav-link">Trajectory</a>
+      <a href="#discipline" class="block py-1.5 mobile-nav-link">Discipline</a>
+      <a href="#contact" class="block py-1.5 mobile-nav-link">Contact</a>
+      <div class="pt-2">
+        <a href="assets/Eren_Alsan_CV.pdf" download="Eren_Alsan_CV.pdf" class="btn-cv flex items-center justify-center gap-2 py-2 rounded font-medium">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span>Download CV (PDF)</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section id="hero" class="pt-32 pb-20 md:pt-40 md:pb-28 border-b section-border">
+    <div class="max-w-6xl mx-auto px-6">
+      
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
+        
+        <!-- Text Column -->
+        <div class="max-w-2xl order-2 md:order-1">
+          
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded text-xs font-mono font-medium tracking-wide status-tag mb-5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Passau, Germany &bull; Available for AI &amp; Software Roles
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-main mb-3">
+            Eren Alsan
+          </h1>
+
+          <p class="font-mono text-xs sm:text-sm text-accent font-medium tracking-tight mb-4">
+            M.Sc. Artificial Intelligence Engineering Student @ Passau | Full-Stack Developer
+          </p>
+
+          <p class="text-muted text-sm sm:text-base leading-relaxed mb-8 max-w-xl">
+            Building local-first processing engines, autonomous systems, and data-driven software.
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap items-center gap-3 mb-8">
+            <a href="#projects" class="btn-solid flex items-center gap-2 px-4 py-2 text-xs font-mono font-medium rounded transition-all">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+              <span>View Projects</span>
+            </a>
+            <a href="assets/Eren_Alsan_CV.pdf" download="Eren_Alsan_CV.pdf" class="btn-outline flex items-center gap-2 px-4 py-2 text-xs font-mono font-medium rounded transition-all">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span>Download CV</span>
+            </a>
+            <a href="#contact" class="btn-subtle flex items-center gap-2 px-4 py-2 text-xs font-mono font-medium rounded transition-all">
+              <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+              <span>Contact</span>
+            </a>
+          </div>
+
+          <!-- Social Links -->
+          <div class="flex items-center gap-3 text-xs font-mono text-muted">
+            <a href="https://github.com/rnlsn326" target="_blank" rel="noopener noreferrer" class="social-link flex items-center gap-1.5 hover:text-main transition-colors">
+              <i data-lucide="github" class="w-3.5 h-3.5"></i>
+              <span>rnlsn326</span>
+            </a>
+            <span>&bull;</span>
+            <a href="https://www.linkedin.com/in/eren-alsan-3b159a225/" target="_blank" rel="noopener noreferrer" class="social-link flex items-center gap-1.5 hover:text-main transition-colors">
+              <i data-lucide="linkedin" class="w-3.5 h-3.5"></i>
+              <span>LinkedIn</span>
+            </a>
+            <span>&bull;</span>
+            <a href="mailto:eren.alsan@outlook.com" class="social-link flex items-center gap-1.5 hover:text-main transition-colors">
+              <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+              <span>Email</span>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Profile Photo (Circular Frame with Subtle --accent Border) -->
+        <div class="order-1 md:order-2 self-start md:self-center shrink-0">
+          <div class="profile-container">
+            <img 
+              src="assets/pp.jpg" 
+              alt="Eren Alsan" 
+              class="profile-img"
+              loading="eager"
+              onerror="this.style.display='none'; document.getElementById('profile-initials-fallback').classList.remove('hidden');" 
+            />
+            <div id="profile-initials-fallback" class="avatar-fallback hidden">EA</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- UNIFORM PROJECT GRID SECTION (#projects) -->
+  <section id="projects" class="py-20 border-b section-border">
+    <div class="max-w-6xl mx-auto px-6">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-10">
+        <div>
+          <div class="font-mono text-xs text-accent uppercase tracking-wider mb-1.5">01 // Engineering</div>
+          <h2 class="text-2xl font-bold tracking-tight text-main">Engineered Systems</h2>
+        </div>
+        <p class="text-xs font-mono text-muted max-w-sm">
+          Equal-grid cards with interactive modal architecture breakdowns.
+        </p>
+      </div>
+
+      <!-- Uniform Grid (Equal Height & Equal Width) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        
+        <!-- 1. Minimalframe (Primary - WIP) -->
+        <div class="project-card flex flex-col justify-between p-5 rounded border transition-all cursor-pointer group"
+             data-project="minimalframe" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open Minimalframe details">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="font-mono text-[11px] text-accent font-medium tracking-tight">01 &bull; Local-First Engine</span>
+              <span class="badge-status-wip font-mono text-[10px] px-2 py-0.5 rounded flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-current animate-pulse"></span>
+                In Progress
+              </span>
+            </div>
+            <h3 class="text-base font-semibold text-main tracking-tight mb-2 group-hover:text-accent transition-colors">
+              Minimalframe
+            </h3>
+            <p class="text-xs text-muted leading-relaxed mb-4">
+              Local-first, privacy-focused photo processing &amp; framing engine (PWA &amp; Android).
+            </p>
+          </div>
+          <div>
+            <div class="flex flex-wrap gap-1.5 pt-3 border-t card-divider mb-3">
+              <span class="tag-pill">Svelte</span>
+              <span class="tag-pill">Vite</span>
+              <span class="tag-pill">Capacitor</span>
+              <span class="tag-pill">Canvas API</span>
+              <span class="tag-pill">JSZip</span>
+            </div>
+            <div class="flex items-center justify-between font-mono text-[11px] text-muted group-hover:text-main transition-colors">
+              <span>Inspect Architecture</span>
+              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Autonomous Military Support Drone (GÖKBAĞ) -->
+        <div id="gokbag-card" class="project-card flex flex-col justify-between p-5 rounded border transition-all cursor-pointer group relative overflow-hidden"
+             data-project="gokbag" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open GÖKBAĞ details">
+          
+          <!-- Micro-Interaction Top-Down Birds-Eye Drone Tracker -->
+          <div id="gokbag-drone-tracker" class="drone-tracker-overlay absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <div id="mini-drone" class="absolute pointer-events-none -translate-x-1/2 -translate-y-1/2">
+              <svg class="w-8 h-8 text-accent" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- X-Frame Arms -->
+                <line x1="16" y1="16" x2="48" y2="48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="48" y1="16" x2="16" y2="48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- 4 Rotors -->
+                <circle cx="16" cy="16" r="7" stroke="currentColor" stroke-width="1.5" class="rotor-spin"/>
+                <circle cx="48" cy="16" r="7" stroke="currentColor" stroke-width="1.5" class="rotor-spin"/>
+                <circle cx="16" cy="48" r="7" stroke="currentColor" stroke-width="1.5" class="rotor-spin"/>
+                <circle cx="48" cy="48" r="7" stroke="currentColor" stroke-width="1.5" class="rotor-spin"/>
+                <!-- Center Body -->
+                <rect x="26" y="26" width="12" height="12" rx="2" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.5"/>
+                <!-- Optical Reticle -->
+                <circle cx="32" cy="32" r="2" fill="#ef4444"/>
+              </svg>
+            </div>
+            <div id="drone-hud" class="absolute bottom-2 right-3 font-mono text-[9px] text-muted tracking-widest uppercase">
+              RADAR: ACTIVE
+            </div>
+          </div>
+
+          <div class="relative z-10">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="font-mono text-[11px] text-muted font-medium tracking-tight">02 &bull; Autonomous Systems</span>
+              <span class="tag-pill text-[10px]">Defense AI</span>
+            </div>
+            <h3 class="text-base font-semibold text-main tracking-tight mb-2 group-hover:text-accent transition-colors">
+              Autonomous Military Support Drone (GÖKBAĞ)
+            </h3>
+            <p class="text-xs text-muted leading-relaxed mb-4">
+              AI-powered drone software for object tracking and friend-or-foe identification.
+            </p>
+          </div>
+          <div class="relative z-10">
+            <div class="flex flex-wrap gap-1.5 pt-3 border-t card-divider mb-3">
+              <span class="tag-pill">Python</span>
+              <span class="tag-pill">YOLO</span>
+              <span class="tag-pill">OpenCV</span>
+            </div>
+            <div class="flex items-center justify-between font-mono text-[11px] text-muted group-hover:text-main transition-colors">
+              <span>Inspect Architecture</span>
+              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Credit Eligibility ML Model -->
+        <div class="project-card flex flex-col justify-between p-5 rounded border transition-all cursor-pointer group"
+             data-project="credit-ml" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open Credit ML details">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="font-mono text-[11px] text-muted font-medium tracking-tight">03 &bull; Machine Learning</span>
+              <span class="tag-pill text-[10px]">FinTech</span>
+            </div>
+            <h3 class="text-base font-semibold text-main tracking-tight mb-2 group-hover:text-accent transition-colors">
+              Credit Eligibility ML Model
+            </h3>
+            <p class="text-xs text-muted leading-relaxed mb-4">
+              Machine learning model analyzing customer data for banking risk assessment.
+            </p>
+          </div>
+          <div>
+            <div class="flex flex-wrap gap-1.5 pt-3 border-t card-divider mb-3">
+              <span class="tag-pill">Python</span>
+              <span class="tag-pill">Scikit-Learn</span>
+              <span class="tag-pill">Data Analysis</span>
+            </div>
+            <div class="flex items-center justify-between font-mono text-[11px] text-muted group-hover:text-main transition-colors">
+              <span>Inspect Architecture</span>
+              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Universal Polymer & Vita Global Services -->
+        <div class="project-card flex flex-col justify-between p-5 rounded border transition-all cursor-pointer group"
+             data-project="enterprise-apex" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open Universal Polymer details">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="font-mono text-[11px] text-muted font-medium tracking-tight">04 &bull; Enterprise Systems</span>
+              <span class="tag-pill text-[10px]">Production</span>
+            </div>
+            <h3 class="text-base font-semibold text-main tracking-tight mb-2 group-hover:text-accent transition-colors">
+              Universal Polymer &amp; Vita Global Services
+            </h3>
+            <p class="text-xs text-muted leading-relaxed mb-4">
+              Enterprise inventory, invoicing, and sales margin services with WhatsApp/Email APIs.
+            </p>
+          </div>
+          <div>
+            <div class="flex flex-wrap gap-1.5 pt-3 border-t card-divider mb-3">
+              <span class="tag-pill">Oracle APEX</span>
+              <span class="tag-pill">JavaScript</span>
+              <span class="tag-pill">REST API</span>
+            </div>
+            <div class="flex items-center justify-between font-mono text-[11px] text-muted group-hover:text-main transition-colors">
+              <span>Inspect Architecture</span>
+              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Unity Pişti Game & .NET 7 API -->
+        <div class="project-card flex flex-col justify-between p-5 rounded border transition-all cursor-pointer group"
+             data-project="unity-pisti" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open Unity Pişti details">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="font-mono text-[11px] text-muted font-medium tracking-tight">05 &bull; Real-time Systems</span>
+              <span class="tag-pill text-[10px]">Multiplayer</span>
+            </div>
+            <h3 class="text-base font-semibold text-main tracking-tight mb-2 group-hover:text-accent transition-colors">
+              Unity Pişti Game &amp; .NET 7 API
+            </h3>
+            <p class="text-xs text-muted leading-relaxed mb-4">
+              Multiplayer card game built in Unity backed by .NET 7 REST API.
+            </p>
+          </div>
+          <div>
+            <div class="flex flex-wrap gap-1.5 pt-3 border-t card-divider mb-3">
+              <span class="tag-pill">Unity C#</span>
+              <span class="tag-pill">.NET 7</span>
+              <span class="tag-pill">PostgreSQL</span>
+            </div>
+            <div class="flex items-center justify-between font-mono text-[11px] text-muted group-hover:text-main transition-colors">
+              <span>Inspect Architecture</span>
+              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PHOTOGRAPHY & CREATIVE WORK SECTION (#photography) -->
+  <section id="photography" class="py-20 border-b section-border">
+    <div class="max-w-6xl mx-auto px-6">
+      
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-10">
+        <div>
+          <div class="font-mono text-xs text-accent uppercase tracking-wider mb-1.5">02 // Visuals</div>
+          <h2 class="text-2xl font-bold tracking-tight text-main">Photography &amp; Visuals</h2>
+        </div>
+        <p class="text-xs text-muted max-w-md italic font-serif">
+          &ldquo;Capturing moments through the lens &mdash; the primary inspiration behind building Minimalframe.&rdquo;
+        </p>
+      </div>
+
+      <!-- Gallery Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        
+        <!-- Photo Item 1 -->
+        <div class="photo-card rounded border overflow-hidden cursor-pointer group" 
+             data-photo="assets/photography/photo1.jpg" data-caption="Architectural Perspectives &bull; Passau, Germany">
+          <div class="photo-aspect-box relative">
+            <img 
+              src="assets/photography/photo1.jpg" 
+              alt="Architectural study in Passau" 
+              class="photo-img"
+              loading="lazy"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" 
+            />
+            <!-- Elegant Fallback Viewfinder Card -->
+            <div class="photo-fallback-card hidden flex flex-col justify-between p-4">
+              <div class="flex items-center justify-between font-mono text-[10px] text-muted">
+                <span>[RAW / EXIF]</span>
+                <span>ISO 100 &bull; 35mm &bull; ƒ/2.8</span>
+              </div>
+              <div class="text-center my-8">
+                <i data-lucide="camera" class="w-6 h-6 text-accent mx-auto mb-2 opacity-90"></i>
+                <div class="font-mono text-xs text-main font-medium">Bavaria Architectural Study</div>
+                <div class="text-[11px] text-muted mt-1">Passau &bull; Germany</div>
+              </div>
+              <div class="flex items-center justify-between font-mono text-[10px] text-muted">
+                <span>1/250s</span>
+                <span>Minimalframe Preset: 4:5</span>
+              </div>
+            </div>
+            <div class="photo-overlay absolute inset-0 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span class="font-mono text-[11px] px-2 py-1 rounded photo-tag-label">View Lightbox</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo Item 2 -->
+        <div class="photo-card rounded border overflow-hidden cursor-pointer group" 
+             data-photo="assets/photography/photo2.jpg" data-caption="Mediterranean Coastlines &bull; Aegean Water Solitude">
+          <div class="photo-aspect-box relative">
+            <img 
+              src="assets/photography/photo2.jpg" 
+              alt="Mediterranean coastline" 
+              class="photo-img"
+              loading="lazy"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" 
+            />
+            <!-- Fallback Viewfinder Card -->
+            <div class="photo-fallback-card hidden flex flex-col justify-between p-4">
+              <div class="flex items-center justify-between font-mono text-[10px] text-muted">
+                <span>[RAW / EXIF]</span>
+                <span>ISO 200 &bull; 50mm &bull; ƒ/1.8</span>
+              </div>
+              <div class="text-center my-8">
+                <i data-lucide="aperture" class="w-6 h-6 text-accent mx-auto mb-2 opacity-90"></i>
+                <div class="font-mono text-xs text-main font-medium">Aegean Marine Landscapes</div>
+                <div class="text-[11px] text-muted mt-1">Coastlines &bull; Freediving Grounds</div>
+              </div>
+              <div class="flex items-center justify-between font-mono text-[10px] text-muted">
+                <span>1/1000s</span>
+                <span>Minimalframe Preset: Polaroid</span>
+              </div>
+            </div>
+            <div class="photo-overlay absolute inset-0 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span class="font-mono text-[11px] px-2 py-1 rounded photo-tag-label">View Lightbox</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo Item 3 -->
+        <div class="photo-card rounded border overflow-hidden cursor-pointer group" 
+             data-photo="assets/photography/photo3.jpg" data-caption="Urban Geometry &amp; Textures in the wild">
+          <div class="photo-aspect-box relative">
+            <img 
+              src="assets/photography/photo3.jpg" 
+              alt="Urban geometry" 
+              class="photo-img"
+              loading="lazy"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" 
+            />
+            <!-- Fallback Viewfinder Card -->
+            <div class="photo-fallback-card hidden flex flex-col justify-between p-4">
+              <div class="flex items-center justify-between font-mono text-[10px] text-muted">
+                <span>[RAW / EXIF]</span>
+                <span>ISO 400 &bull; 24mm &bull; ƒ/4.0</span>
+              </div>
+              <div class="text-center my-8">
+                <i data-lucide="focus" class="w-6 h-6 text-accent mx-auto mb-2 opacity-90"></i>
+                <div class="font-mono text-xs text-main font-medium">Urban Silhouettes &amp; Textures</div>
+                <div class="text-[11px] text-muted mt-1">Light &amp; Geometry Contrast</div>
+              </div>
+              <div class="flex items-center justify-between font-mono text-[10px] text-muted">
+                <span>1/500s</span>
+                <span>Minimalframe Preset: 16:9 Letterbox</span>
+              </div>
+            </div>
+            <div class="photo-overlay absolute inset-0 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span class="font-mono text-[11px] px-2 py-1 rounded photo-tag-label">View Lightbox</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILLS SECTION (#skills) -->
+  <section id="skills" class="py-20 border-b section-border">
+    <div class="max-w-6xl mx-auto px-6">
+      
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-10">
+        <div>
+          <div class="font-mono text-xs text-accent uppercase tracking-wider mb-1.5">03 // Technical Stack</div>
+          <h2 class="text-2xl font-bold tracking-tight text-main">Capabilities &amp; Tools</h2>
+        </div>
+        <p class="text-xs font-mono text-muted max-w-sm">
+          Pragmatic engineering stack chosen for speed, reliability, and local execution.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Languages -->
+        <div class="skill-card p-4 rounded border">
+          <div class="font-mono text-xs text-accent font-medium mb-3 flex items-center gap-2">
+            <i data-lucide="code-2" class="w-3.5 h-3.5"></i>
+            <span>Languages</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="tag-pill">Python</span>
+            <span class="tag-pill">C#</span>
+            <span class="tag-pill">JavaScript (ES6+)</span>
+            <span class="tag-pill">Java</span>
+            <span class="tag-pill">C / C++</span>
+            <span class="tag-pill">SQL / PL-SQL</span>
+          </div>
+        </div>
+
+        <!-- AI & Vision -->
+        <div class="skill-card p-4 rounded border">
+          <div class="font-mono text-xs text-accent font-medium mb-3 flex items-center gap-2">
+            <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+            <span>AI &amp; Vision</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="tag-pill">YOLO</span>
+            <span class="tag-pill">OpenCV</span>
+            <span class="tag-pill">Scikit-Learn</span>
+            <span class="tag-pill">NumPy</span>
+            <span class="tag-pill">Pandas</span>
+            <span class="tag-pill">Neural Networks</span>
+          </div>
+        </div>
+
+        <!-- Web & Mobile -->
+        <div class="skill-card p-4 rounded border">
+          <div class="font-mono text-xs text-accent font-medium mb-3 flex items-center gap-2">
+            <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+            <span>Web &amp; Mobile</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="tag-pill">Svelte</span>
+            <span class="tag-pill">Capacitor</span>
+            <span class="tag-pill">.NET 7</span>
+            <span class="tag-pill">Oracle APEX</span>
+            <span class="tag-pill">Canvas API</span>
+            <span class="tag-pill">Unity</span>
+          </div>
+        </div>
+
+        <!-- Infrastructure -->
+        <div class="skill-card p-4 rounded border">
+          <div class="font-mono text-xs text-accent font-medium mb-3 flex items-center gap-2">
+            <i data-lucide="database" class="w-3.5 h-3.5"></i>
+            <span>Data &amp; Infra</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="tag-pill">PostgreSQL</span>
+            <span class="tag-pill">Oracle SQL</span>
+            <span class="tag-pill">REST APIs</span>
+            <span class="tag-pill">Docker</span>
+            <span class="tag-pill">Linux</span>
+            <span class="tag-pill">Git</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- INTERACTIVE VERTICAL TIMELINE SECTION (#timeline) -->
+  <section id="timeline" class="py-20 border-b section-border">
+    <div class="max-w-4xl mx-auto px-6">
+      
+      <div class="text-center mb-12">
+        <div class="font-mono text-xs text-accent uppercase tracking-wider mb-1.5">04 // Chronology</div>
+        <h2 class="text-2xl font-bold tracking-tight text-main">Academic &amp; Professional Trajectory</h2>
+      </div>
+
+      <div class="relative pl-6 sm:pl-8 border-l space-y-8 timeline-track">
+        
+        <!-- Item 1: Master's Passau -->
+        <div class="timeline-entry relative">
+          <div class="timeline-marker"></div>
+          <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-1">
+            <h3 class="text-sm font-semibold text-main">M.Sc. Artificial Intelligence Engineering</h3>
+            <span class="font-mono text-xs text-accent">2024 &mdash; Present</span>
+          </div>
+          <div class="font-mono text-xs text-muted mb-2">University of Passau, Germany</div>
+          <p class="text-xs text-muted leading-relaxed">
+            Concentrating in Deep Learning, Computer Vision, autonomous neural architectures, and edge deployment.
+          </p>
+        </div>
+
+        <!-- Item 2: Freelance Software Developer -->
+        <div class="timeline-entry relative">
+          <div class="timeline-marker"></div>
+          <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-1">
+            <h3 class="text-sm font-semibold text-main">Freelance Full-Stack Developer</h3>
+            <span class="font-mono text-xs text-accent">2024 &mdash; Present</span>
+          </div>
+          <div class="font-mono text-xs text-muted mb-2">International B2B Clients &bull; Universal Polymer &amp; Vita Global Services</div>
+          <p class="text-xs text-muted leading-relaxed">
+            Delivering production Oracle APEX architectures, automated inventory margins, WhatsApp API notifications, and mission-critical database operations.
+          </p>
+        </div>
+
+        <!-- Item 3: Bachelor's TED University -->
+        <div class="timeline-entry relative">
+          <div class="timeline-marker"></div>
+          <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-1">
+            <h3 class="text-sm font-semibold text-main">B.Sc. Computer Engineering</h3>
+            <span class="font-mono text-xs text-muted">2020 &mdash; 2024</span>
+          </div>
+          <div class="font-mono text-xs text-muted mb-2">TED University, Ankara, Turkey</div>
+          <p class="text-xs text-muted leading-relaxed">
+            Graduated with strong foundations in Data Structures, Algorithms, Operating Systems, Database Systems, and Network Architecture.
+          </p>
+        </div>
+
+        <!-- Item 4: Industry Internships -->
+        <div class="timeline-entry relative">
+          <div class="timeline-marker"></div>
+          <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-1">
+            <h3 class="text-sm font-semibold text-main">Engineering Internships</h3>
+            <span class="font-mono text-xs text-muted">2022 &mdash; 2023</span>
+          </div>
+          <div class="font-mono text-xs text-muted mb-2">Digitoy Games &bull; TED Ankara College &bull; Teknokom Electronics</div>
+          <p class="text-xs text-muted leading-relaxed">
+            Hands-on software development across mobile game engines, educational network backends, and industrial hardware-interfacing codebases.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BEYOND CODE / PERSONAL DISCIPLINE SECTION (#discipline) -->
+  <section id="discipline" class="py-20 border-b section-border">
+    <div class="max-w-6xl mx-auto px-6">
+      
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-10">
+        <div>
+          <div class="font-mono text-xs text-accent uppercase tracking-wider mb-1.5">05 // Foundation</div>
+          <h2 class="text-2xl font-bold tracking-tight text-main">Beyond Code: Personal Discipline</h2>
+        </div>
+        <p class="text-xs font-mono text-muted max-w-sm">
+          Physical discipline and resilience under pressure that directly inform engineering tenacity.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        
+        <!-- Ice Hockey Card -->
+        <div class="discipline-card p-6 rounded border flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="shield" class="w-4 h-4 text-accent"></i>
+              <span class="font-mono text-xs text-accent font-medium">13 Years Competitive Experience</span>
+            </div>
+            <h3 class="text-base font-semibold text-main tracking-tight mb-2">
+              Competitive Ice Hockey
+            </h3>
+            <p class="text-xs text-muted leading-relaxed">
+              Trained and competed for over a decade in high-speed, full-contact team hockey. Developed instincts for real-time strategic awareness, rapid decision-making under intense physical pressure, and unwavering dedication to collective team accountability.
+            </p>
+          </div>
+          <div class="pt-4 mt-4 border-t card-divider font-mono text-[11px] text-muted">
+            Key takeaway: Composure in chaotic environments &bull; Relentless grit
+          </div>
+        </div>
+
+        <!-- Spearfishing / Freediving Card -->
+        <div class="discipline-card p-6 rounded border flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="compass" class="w-4 h-4 text-accent"></i>
+              <span class="font-mono text-xs text-accent font-medium">Deep Water Focus</span>
+            </div>
+            <h3 class="text-base font-semibold text-main tracking-tight mb-2">
+              Spearfishing &amp; Freediving
+            </h3>
+            <p class="text-xs text-muted leading-relaxed">
+              Practicing breath-hold freediving and spearfishing demands absolute physiological control, extreme calm under hypoxic stress, and razor-sharp environmental focus. In underwater solitude, patience and calculated risk assessment are non-negotiable.
+            </p>
+          </div>
+          <div class="pt-4 mt-4 border-t card-divider font-mono text-[11px] text-muted">
+            Key takeaway: Deliberate patience &bull; Single-minded focus under constraints
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION (#contact) -->
+  <section id="contact" class="py-20 border-b section-border">
+    <div class="max-w-2xl mx-auto px-6 text-center">
+      
+      <div class="font-mono text-xs text-accent uppercase tracking-wider mb-1.5">06 // Inquiries</div>
+      <h2 class="text-2xl font-bold tracking-tight text-main mb-3">Direct Contact</h2>
+      <p class="text-xs text-muted leading-relaxed max-w-md mx-auto mb-8">
+        Open for collaborations, software engineering roles, and discussions around local-first architecture and AI.
+      </p>
+
+      <!-- Direct Email Box -->
+      <div class="contact-box p-5 rounded border mb-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="text-left">
+          <div class="font-mono text-[10px] text-muted tracking-wider uppercase mb-0.5">Primary Email</div>
+          <span id="contact-email" class="font-mono text-sm font-medium text-main">eren.alsan@outlook.com</span>
+        </div>
+        <button id="copy-email-btn" onclick="copyEmail()" class="btn-outline flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono rounded cursor-pointer transition-all" aria-label="Copy email">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          <span id="copy-label">Copy</span>
+        </button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-3 mb-8">
+        <a href="mailto:eren.alsan@outlook.com" class="btn-solid flex items-center gap-2 px-5 py-2 text-xs font-mono font-medium rounded transition-all">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+          <span>Send Message</span>
+        </a>
+        <a href="assets/Eren_Alsan_CV.pdf" download="Eren_Alsan_CV.pdf" class="btn-outline flex items-center gap-2 px-5 py-2 text-xs font-mono font-medium rounded transition-all">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span>Download CV (PDF)</span>
+        </a>
+      </div>
+
+      <!-- Socials -->
+      <div class="flex items-center justify-center gap-3">
+        <a href="https://github.com/rnlsn326" target="_blank" rel="noopener noreferrer" class="social-icon-btn p-2 rounded border transition-all" aria-label="GitHub Profile">
+          <i data-lucide="github" class="w-4 h-4"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/eren-alsan-3b159a225/" target="_blank" rel="noopener noreferrer" class="social-icon-btn p-2 rounded border transition-all" aria-label="LinkedIn Profile">
+          <i data-lucide="linkedin" class="w-4 h-4"></i>
+        </a>
+        <a href="mailto:eren.alsan@outlook.com" class="social-icon-btn p-2 rounded border transition-all" aria-label="Send Email">
+          <i data-lucide="mail" class="w-4 h-4"></i>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-8">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-muted">
+      <div>&copy; 2026 Eren Alsan &bull; Passau, Germany</div>
+      <div class="flex items-center gap-4">
+        <a href="#hero" class="hover:text-main transition-colors">Top</a>
+        <a href="#projects" class="hover:text-main transition-colors">Projects</a>
+        <a href="#photography" class="hover:text-main transition-colors">Photography</a>
+        <a href="#timeline" class="hover:text-main transition-colors">Trajectory</a>
+        <a href="#contact" class="hover:text-main transition-colors">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- FULL PROJECT DETAIL MODAL OVERLAY -->
+  <div id="project-modal" class="modal-overlay fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-backdrop absolute inset-0 bg-black/75 backdrop-blur-sm"></div>
+    <div class="modal-dialog relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded border p-6 sm:p-8 z-10">
+      
+      <!-- Close button -->
+      <button id="modal-close-btn" class="absolute top-5 right-5 p-1.5 rounded border text-muted hover:text-main transition-colors cursor-pointer" aria-label="Close dialog">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <!-- Dynamic Modal Content Injection -->
+      <div id="modal-content" class="space-y-5">
+        <!-- Injected via script.js -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHOTOGRAPHY LIGHTBOX OVERLAY -->
+  <div id="lightbox-modal" class="lightbox-overlay fixed inset-0 z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Photo Lightbox">
+    <div class="lightbox-backdrop absolute inset-0 bg-black/90"></div>
+    <div class="relative z-10 max-w-4xl max-h-[90vh] flex flex-col items-center">
+      <button id="lightbox-close-btn" class="absolute -top-10 right-0 p-1.5 text-white/80 hover:text-white transition-colors cursor-pointer" aria-label="Close lightbox">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <img id="lightbox-img" src="" alt="Enlarged view" class="max-h-[75vh] w-auto rounded border border-neutral-700 object-contain" />
+      <div id="lightbox-caption" class="font-mono text-xs text-white/80 mt-3 text-center"></div>
+    </div>
+  </div>
+
+  <!-- FLOATING TOAST -->
+  <div id="toast" class="toast-hidden fixed bottom-6 right-6 z-50 flex items-center gap-2 px-3.5 py-2 rounded text-xs font-mono border shadow-lg transition-all" role="alert" aria-live="polite">
+    <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i>
+    <span id="toast-text">Email copied to clipboard!</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>

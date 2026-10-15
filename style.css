@@ -1,0 +1,366 @@
+/* ==========================================================================
+   EREN ALSAN PORTFOLIO — STYLE.CSS
+   Curated Color Palettes:
+   - Dark (Default): "Space Indigo & Lilac Ash" (#22223b, #4a4e69, #9a8c98, #c9ada7, #f2e9e4)
+   - Light: "Golden Summer Fields" (#fefae0, #faedcd, #e9edc9, #d4a373, #ccd5ae, #2b2b2b, #5c5c5c)
+   ========================================================================== */
+
+/* --- DARK THEME PALETTE ("Space Indigo & Lilac Ash" - Default) --- */
+:root,
+html[data-theme="dark"],
+html.dark {
+  --bg: #22223b;              /* Space Indigo */
+  --card: #4a4e69;            /* Dusty Grape */
+  --card-border: #9a8c98;     /* Lilac Ash */
+  --accent: #c9ada7;          /* Almond Silk */
+  --text-main: #f2e9e4;       /* Seashell */
+  --text-muted: #9a8c98;      /* Lilac Ash */
+  
+  --muted-accent: #9a8c98;
+  --accent-bg: rgba(201, 173, 167, 0.15);
+  --accent-border: rgba(201, 173, 167, 0.35);
+  
+  --btn-solid-bg: #c9ada7;
+  --btn-solid-text: #22223b;
+  --btn-solid-hover: #f2e9e4;
+  
+  --nav-bg: rgba(34, 34, 59, 0.92);
+  --nav-border: #4a4e69;
+  --card-hover: #545975;
+}
+
+/* --- LIGHT THEME PALETTE ("Golden Summer Fields") --- */
+:root[data-theme="light"],
+html[data-theme="light"],
+html.light,
+body.light {
+  --bg: #fefae0;              /* Cornsilk */
+  --card: #faedcd;            /* Papaya Whip */
+  --card-border: #e9edc9;     /* Beige */
+  --accent: #d4a373;          /* Light Bronze */
+  --muted-accent: #ccd5ae;    /* Dry Sage */
+  --text-main: #2b2b2b;       /* Dark Slate / Charcoal */
+  --text-muted: #5c5c5c;      /* Muted Neutral */
+  
+  --accent-bg: rgba(212, 163, 115, 0.18);
+  --accent-border: rgba(212, 163, 115, 0.45);
+  
+  --btn-solid-bg: #d4a373;
+  --btn-solid-text: #ffffff;
+  --btn-solid-hover: #b58253;
+  
+  --nav-bg: rgba(254, 250, 224, 0.94);
+  --nav-border: #e9edc9;
+  --card-hover: #f5e4bd;
+}
+
+/* --- Base Rules --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg);
+  color: var(--text-main);
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-main);
+  min-height: 100vh;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Typography Utilities */
+.text-main { color: var(--text-main); }
+.text-muted { color: var(--text-muted); }
+.text-accent { color: var(--accent); }
+
+/* Borders & Dividers */
+.section-border {
+  border-color: var(--card-border);
+}
+.card-divider {
+  border-color: var(--card-border);
+}
+
+/* Header & Navigation */
+#site-header {
+  background-color: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.brand-monogram {
+  color: var(--text-main);
+}
+.nav-item {
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+.nav-item:hover {
+  color: var(--text-main);
+}
+
+.mobile-menu-overlay {
+  background-color: var(--bg);
+  border-color: var(--card-border);
+}
+.mobile-nav-link {
+  color: var(--text-muted);
+}
+.mobile-nav-link:hover {
+  color: var(--text-main);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  background-color: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+}
+.theme-toggle-btn:hover {
+  color: var(--text-main);
+  border-color: var(--accent);
+}
+
+/* Icon Switching Visibility */
+html[data-theme="dark"] .theme-sun-icon,
+html.dark .theme-sun-icon {
+  display: block !important;
+}
+html[data-theme="dark"] .theme-moon-icon,
+html.dark .theme-moon-icon {
+  display: none !important;
+}
+
+html[data-theme="light"] .theme-sun-icon,
+html.light .theme-sun-icon {
+  display: none !important;
+}
+html[data-theme="light"] .theme-moon-icon,
+html.light .theme-moon-icon {
+  display: block !important;
+}
+
+.menu-trigger {
+  background-color: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+}
+
+/* Status Tag in Hero */
+.status-tag {
+  background-color: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+}
+
+/* Buttons */
+.btn-solid {
+  background-color: var(--btn-solid-bg);
+  color: var(--btn-solid-text);
+  border: 1px solid transparent;
+}
+.btn-solid:hover {
+  background-color: var(--btn-solid-hover);
+}
+
+.btn-outline {
+  background-color: var(--card);
+  color: var(--text-main);
+  border: 1px solid var(--card-border);
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  background-color: var(--card-hover);
+}
+
+.btn-subtle {
+  color: var(--text-muted);
+  border: 1px solid transparent;
+}
+.btn-subtle:hover {
+  color: var(--text-main);
+  background-color: var(--card);
+}
+
+.btn-cv {
+  background-color: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  color: var(--accent);
+}
+.btn-cv:hover {
+  background-color: var(--accent);
+  color: var(--bg);
+}
+
+/* Profile Photo Container with subtle --accent border */
+.profile-container {
+  width: 104px;
+  height: 104px;
+  border-radius: 9999px;
+  padding: 3.5px;
+  background-color: var(--card);
+  border: 2px solid var(--accent);
+}
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 9999px;
+  display: block;
+}
+.avatar-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--accent-bg);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 1.35rem;
+}
+
+/* Project Cards (Equal Heights, Uniform Grid) */
+.project-card {
+  background-color: var(--card);
+  border-color: var(--card-border);
+  min-height: 220px;
+}
+.project-card:hover {
+  background-color: var(--card-hover);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.badge-status-wip {
+  background-color: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  color: var(--accent);
+}
+
+.tag-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.675rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.25rem;
+  background-color: var(--bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+}
+
+/* Drone Cursor Micro-Interaction */
+.drone-tracker-overlay {
+  background: radial-gradient(circle at center, var(--accent-bg) 0%, transparent 70%);
+}
+.rotor-spin {
+  animation: rotorSpin 0.3s linear infinite;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+@keyframes rotorSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Photography Cards */
+.photo-card {
+  background-color: var(--card);
+  border-color: var(--card-border);
+}
+.photo-card:hover {
+  border-color: var(--accent);
+}
+.photo-aspect-box {
+  width: 100%;
+  min-height: 210px;
+  background-color: var(--card);
+}
+.photo-img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  display: block;
+}
+.photo-fallback-card {
+  width: 100%;
+  height: 210px;
+  background-color: var(--card);
+}
+.photo-tag-label {
+  background-color: var(--bg);
+  color: var(--text-main);
+  border: 1px solid var(--card-border);
+}
+
+/* Skills, Discipline, Contact */
+.skill-card,
+.discipline-card,
+.contact-box {
+  background-color: var(--card);
+  border-color: var(--card-border);
+}
+.discipline-card:hover {
+  border-color: var(--accent);
+}
+
+/* Timeline */
+.timeline-track {
+  border-color: var(--card-border);
+}
+.timeline-marker {
+  position: absolute;
+  left: -29px;
+  top: 5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  background-color: var(--accent);
+  border: 2px solid var(--bg);
+}
+@media (min-width: 640px) {
+  .timeline-marker {
+    left: -37px;
+  }
+}
+
+/* Social Buttons */
+.social-icon-btn {
+  background-color: var(--card);
+  border-color: var(--card-border);
+  color: var(--text-muted);
+}
+.social-icon-btn:hover {
+  color: var(--text-main);
+  border-color: var(--accent);
+}
+
+/* Modal Dialog */
+.modal-dialog {
+  background-color: var(--card);
+  border-color: var(--card-border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+}
+
+/* Toast */
+#toast {
+  background-color: var(--card);
+  border-color: var(--card-border);
+  color: var(--text-main);
+}
+.toast-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+}
+.toast-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
