@@ -1,32 +1,35 @@
 /* ==========================================================================
    EREN ALSAN PORTFOLIO — STYLE.CSS
    Curated Color Palettes:
-   - Dark (Default): "Space Indigo & Lilac Ash" (#22223b, #4a4e69, #9a8c98, #c9ada7, #f2e9e4)
-   - Light: "Golden Summer Fields" (#fefae0, #faedcd, #e9edc9, #d4a373, #ccd5ae, #2b2b2b, #5c5c5c)
+   - Dark (Default): "Space Indigo & Lilac Ash" (#1d1d33, #2a2a48, #4a4e69, #39395f, #c9ada7, #f2e9e4, #9a8c98)
+   - Light: "Golden Summer Fields" (#fefae0, #ffffff, #e9edc9, #faedcd, #d4a373, #ccd5ae, #1e293b, #64748b)
    ========================================================================== */
 
 /* --- DARK THEME PALETTE ("Space Indigo & Lilac Ash" - Default) --- */
 :root,
 html[data-theme="dark"],
 html.dark {
-  --bg: #22223b;              /* Space Indigo */
-  --card: #4a4e69;            /* Dusty Grape */
-  --card-border: #9a8c98;     /* Lilac Ash */
+  --bg: #1d1d33;              /* Deep Space Indigo */
+  --card: #2a2a48;            /* Elevated Grape/Indigo surface */
+  --card-border: #4a4e69;     /* Dusty Grape */
+  --badge-bg: #39395f;
   --accent: #c9ada7;          /* Almond Silk */
+  --accent-hover: #9a8c98;    /* Lilac Ash */
   --text-main: #f2e9e4;       /* Seashell */
   --text-muted: #9a8c98;      /* Lilac Ash */
-  
+
   --muted-accent: #9a8c98;
   --accent-bg: rgba(201, 173, 167, 0.15);
   --accent-border: rgba(201, 173, 167, 0.35);
-  
+
   --btn-solid-bg: #c9ada7;
-  --btn-solid-text: #22223b;
+  --btn-solid-text: #1d1d33;
   --btn-solid-hover: #f2e9e4;
-  
-  --nav-bg: rgba(34, 34, 59, 0.92);
+
+  --nav-bg: rgba(29, 29, 51, 0.92);
   --nav-border: #4a4e69;
-  --card-hover: #545975;
+  --card-hover: #303052;
+  --card-shadow: 0 14px 32px -18px rgba(0, 0, 0, 0.7);
 }
 
 /* --- LIGHT THEME PALETTE ("Golden Summer Fields") --- */
@@ -35,23 +38,26 @@ html[data-theme="light"],
 html.light,
 body.light {
   --bg: #fefae0;              /* Cornsilk */
-  --card: #faedcd;            /* Papaya Whip */
-  --card-border: #e9edc9;     /* Beige */
+  --card: #ffffff;            /* Crisp white so cards pop */
+  --card-border: #e9edc9;     /* Beige / Sage line */
+  --badge-bg: #faedcd;        /* Papaya Whip */
   --accent: #d4a373;          /* Light Bronze */
+  --accent-hover: #ccd5ae;    /* Dry Sage */
   --muted-accent: #ccd5ae;    /* Dry Sage */
-  --text-main: #2b2b2b;       /* Dark Slate / Charcoal */
-  --text-muted: #5c5c5c;      /* Muted Neutral */
-  
+  --text-main: #1e293b;       /* Deep Slate */
+  --text-muted: #64748b;
+
   --accent-bg: rgba(212, 163, 115, 0.18);
   --accent-border: rgba(212, 163, 115, 0.45);
-  
+
   --btn-solid-bg: #d4a373;
   --btn-solid-text: #ffffff;
   --btn-solid-hover: #b58253;
-  
+
   --nav-bg: rgba(254, 250, 224, 0.94);
   --nav-border: #e9edc9;
-  --card-hover: #f5e4bd;
+  --card-hover: #fffef8;
+  --card-shadow: 0 14px 30px -18px rgba(30, 41, 59, 0.28);
 }
 
 /* --- Base Rules --- */
@@ -158,6 +164,35 @@ html.light .theme-moon-icon {
   color: var(--text-main);
 }
 
+/* Hero: faint neural dot-grid fading out from behind the photo */
+.hero-ai::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--card-border) 1.2px, transparent 1.2px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 78% 45%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(ellipse 60% 70% at 78% 45%, #000 0%, transparent 75%);
+  pointer-events: none;
+}
+
+/* AI focus-area chips in hero */
+.focus-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  background-color: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  color: var(--text-main);
+}
+.focus-chip svg {
+  color: var(--accent);
+}
+
 /* Buttons */
 .btn-solid {
   background-color: var(--btn-solid-bg);
@@ -197,14 +232,25 @@ html.light .theme-moon-icon {
   color: var(--bg);
 }
 
-/* Profile Photo Container with subtle --accent border */
+/* Profile Photo: accent ring + bg gap + hairline outer ring (double border) */
 .profile-container {
-  width: 104px;
-  height: 104px;
+  width: 128px;
+  height: 128px;
   border-radius: 9999px;
-  padding: 3.5px;
+  padding: 5px;
   background-color: var(--card);
   border: 2px solid var(--accent);
+  box-shadow:
+    0 0 0 6px var(--bg),
+    0 0 0 7px var(--card-border),
+    0 22px 44px -18px rgba(0, 0, 0, 0.45);
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+@media (min-width: 768px) {
+  .profile-container {
+    width: 160px;
+    height: 160px;
+  }
 }
 .profile-img {
   width: 100%;
@@ -224,19 +270,73 @@ html.light .theme-moon-icon {
   justify-content: center;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 600;
-  font-size: 1.35rem;
+  font-size: 2rem;
 }
 
 /* Project Cards (Equal Heights, Uniform Grid) */
 .project-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate; /* lets .card-bg-graphic sit at z-index:-1 above the card bg */
   background-color: var(--card);
   border-color: var(--card-border);
   min-height: 220px;
 }
-.project-card:hover {
+.project-card:hover,
+.project-card:focus-visible {
   background-color: var(--card-hover);
   border-color: var(--accent);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: var(--card-shadow), 0 0 0 3px color-mix(in srgb, var(--accent-hover) 45%, transparent);
+  outline: none;
+}
+
+/* Contextual low-opacity domain graphics (top-right) */
+.card-bg-graphic {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 150px;
+  height: 150px;
+  z-index: -1;
+  color: var(--accent);
+  opacity: 0.08;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.project-card:hover .card-bg-graphic {
+  opacity: 0.16;
+  transform: scale(1.06) rotate(-3deg);
+}
+.radar-sweep {
+  transform-origin: 75px 75px;
+  animation: radarSweep 4s linear infinite;
+}
+@keyframes radarSweep {
+  to { transform: rotate(360deg); }
+}
+
+/* Pişti floating card follower */
+.card-follower {
+  position: absolute;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+.card-follower-inner {
+  animation: cardWobble 3s ease-in-out infinite alternate;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
+}
+@keyframes cardWobble {
+  from { transform: rotate(-12deg); }
+  to   { transform: rotate(12deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotor-spin,
+  .radar-sweep,
+  .card-follower-inner {
+    animation: none;
+  }
 }
 
 .badge-status-wip {
@@ -250,7 +350,7 @@ html.light .theme-moon-icon {
   font-size: 0.675rem;
   padding: 0.15rem 0.45rem;
   border-radius: 0.25rem;
-  background-color: var(--bg);
+  background-color: var(--badge-bg);
   border: 1px solid var(--card-border);
   color: var(--text-main);
 }
@@ -269,45 +369,74 @@ html.light .theme-moon-icon {
   to { transform: rotate(360deg); }
 }
 
-/* Photography Cards */
-.photo-card {
+.visuals-subsection {
   background-color: var(--card);
   border-color: var(--card-border);
 }
-.photo-card:hover {
-  border-color: var(--accent);
+.visuals-cta {
+  cursor: pointer;
 }
-.photo-aspect-box {
+.visuals-cta:focus-visible,
+.lightbox-nav-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.lightbox-viewer {
+  min-height: min(75vh, 620px);
+}
+.lightbox-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(900px, calc(100vw - 6.5rem));
+  min-width: 0;
+}
+.lightbox-media img {
+  max-width: 100%;
+}
+.lightbox-fallback {
   width: 100%;
-  min-height: 210px;
+  height: min(60vh, 560px);
+  min-height: 220px;
   background-color: var(--card);
+  border-color: var(--card-border);
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  line-height: 1.8;
+  text-align: center;
+  white-space: pre-line;
 }
-.photo-img {
-  width: 100%;
-  height: 210px;
-  object-fit: cover;
-  display: block;
+.lightbox-nav-btn {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
-.photo-fallback-card {
-  width: 100%;
-  height: 210px;
-  background-color: var(--card);
-}
-.photo-tag-label {
-  background-color: var(--bg);
-  color: var(--text-main);
-  border: 1px solid var(--card-border);
+.lightbox-nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
 }
 
 /* Skills, Discipline, Contact */
 .skill-card,
 .discipline-card,
+.roadmap-card,
 .contact-box {
   background-color: var(--card);
   border-color: var(--card-border);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.discipline-card:hover {
+.discipline-card:hover,
+.roadmap-card:hover {
   border-color: var(--accent);
+  box-shadow: var(--card-shadow);
 }
 
 /* Timeline */

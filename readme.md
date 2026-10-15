@@ -35,7 +35,7 @@ Designed to strictly eliminate "AI Slop" visual tropes (oversaturated neon gradi
 - **⚡ Zero-Framework Performance:** Built using pure HTML5, CSS custom properties, Tailwind CSS (via CDN), and Vanilla JavaScript for instant page loads and zero hydration overhead.
 - **🛸 Top-Down Drone LERP Follower:** A smooth, interactive top-down drone cursor-tracking effect (using LERP animation) embedded within the GÖKBAĞ Autonomous Drone project card.
 - **🖼️ Minimalframe Spotlight:** Showcases the local-first, GPU proxy-rendering photo processing engine built using Svelte, Canvas API, and Capacitor.
-- **🪟 Interactive Modal & Lightbox System:** Uniform project cards opening detailed technical architecture modals, paired with a photography gallery lightbox.
+- **🪟 Interactive Modal & Lightbox System:** Uniform project cards opening detailed technical architecture modals, paired with a compact, keyboard-navigable photography slideshow in the Beyond Code section.
 - **🌗 Theme Toggle with State Persistence:** Seamless switcher between *Golden Summer Fields* and *Space Indigo* persisted via `localStorage`.
 
 ---

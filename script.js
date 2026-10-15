@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProjectModals();
   initPhotoLightbox();
   initGokbagDroneMicroInteraction();
+  initPistiCardMicroInteraction();
 });
 
 /**
@@ -187,7 +188,7 @@ function initProjectModals() {
     if (data.github) {
       githubBtnHtml = `
         <a href="${data.github}" target="_blank" rel="noopener noreferrer" class="btn-solid inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-mono font-medium rounded transition-all">
-          <i data-lucide="github" class="w-3.5 h-3.5"></i>
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
           <span>View on GitHub</span>
           <i data-lucide="external-link" class="w-3 h-3"></i>
         </a>
@@ -290,61 +291,134 @@ function initPhotoLightbox() {
   const lightbox = document.getElementById('lightbox-modal');
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxCaption = document.getElementById('lightbox-caption');
+  const lightboxFallback = document.getElementById('lightbox-fallback');
+  const lightboxCounter = document.getElementById('lightbox-counter');
   const closeBtn = document.getElementById('lightbox-close-btn');
+  const prevBtn = document.getElementById('lightbox-prev-btn');
+  const nextBtn = document.getElementById('lightbox-next-btn');
+  const openVisualsBtn = document.getElementById('open-visuals-btn');
   const backdrop = lightbox ? lightbox.querySelector('.lightbox-backdrop') : null;
+  const slides = [
+    {
+      src: 'assets/photography/photo1.jpg',
+      alt: 'Architectural study in Passau',
+      caption: 'Architectural Perspectives • Passau, Germany',
+      fallback: 'Bavaria Architectural Study\nPassau • Germany\nISO 100 • 35mm • f/2.8'
+    },
+    {
+      src: 'assets/photography/photo2.jpg',
+      alt: 'Mediterranean coastline',
+      caption: 'Mediterranean Coastlines • Aegean Water Solitude',
+      fallback: 'Aegean Marine Landscapes\nCoastlines • Freediving Grounds\nISO 200 • 50mm • f/1.8'
+    },
+    {
+      src: 'assets/photography/photo3.jpg',
+      alt: 'Urban geometry',
+      caption: 'Urban Geometry & Textures in the wild',
+      fallback: 'Urban Silhouettes & Textures\nLight & Geometry Contrast\nISO 400 • 24mm • f/4.0'
+    }
+  ];
 
-  if (!lightbox) return;
+  if (!lightbox || !lightboxImg || !lightboxCaption || !lightboxFallback || !slides.length) return;
 
-  function openLightbox(src, caption) {
-    lightboxImg.src = src;
-    lightboxCaption.textContent = caption || '';
+  let currentIndex = 0;
+  let previousFocus = null;
+
+  function showSlide(index) {
+    currentIndex = (index + slides.length) % slides.length;
+    const slide = slides[currentIndex];
+
+    lightboxImg.classList.add('hidden');
+    lightboxFallback.classList.add('hidden');
+    lightboxImg.removeAttribute('src');
+    lightboxImg.alt = slide.alt;
+    lightboxFallback.textContent = slide.fallback;
+    lightboxCaption.textContent = slide.caption;
+    if (lightboxCounter) {
+      lightboxCounter.textContent = `${currentIndex + 1} / ${slides.length}`;
+    }
+
+    const slideIndex = currentIndex;
+    lightboxImg.onerror = () => {
+      if (currentIndex !== slideIndex) return;
+      lightboxImg.classList.add('hidden');
+      lightboxFallback.classList.remove('hidden');
+    };
+    lightboxImg.onload = () => {
+      if (currentIndex !== slideIndex) return;
+      lightboxFallback.classList.add('hidden');
+      lightboxImg.classList.remove('hidden');
+    };
+    lightboxImg.src = slide.src;
+  }
+
+  function openLightbox(index) {
+    previousFocus = document.activeElement;
+    showSlide(index);
     lightbox.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    if (closeBtn) closeBtn.focus();
   }
 
   function closeLightbox() {
     lightbox.classList.add('hidden');
-    lightboxImg.src = '';
+    lightboxImg.removeAttribute('src');
     document.body.style.overflow = '';
+    if (previousFocus && typeof previousFocus.focus === 'function') previousFocus.focus();
   }
 
-  document.querySelectorAll('.photo-card[data-photo]').forEach(card => {
-    card.addEventListener('click', () => {
-      const src = card.getAttribute('data-photo');
-      const caption = card.getAttribute('data-caption');
-      openLightbox(src, caption);
-    });
-  });
+  function showPreviousSlide() {
+    showSlide(currentIndex - 1);
+  }
 
+  function showNextSlide() {
+    showSlide(currentIndex + 1);
+  }
+
+  if (openVisualsBtn) openVisualsBtn.addEventListener('click', () => openLightbox(0));
   if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+  if (prevBtn) prevBtn.addEventListener('click', showPreviousSlide);
+  if (nextBtn) nextBtn.addEventListener('click', showNextSlide);
   if (backdrop) backdrop.addEventListener('click', closeLightbox);
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
-      closeLightbox();
-    }
+    if (lightbox.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') showPreviousSlide();
+    if (e.key === 'ArrowRight') showNextSlide();
   });
 }
 
 /**
- * 5. GÖKBAĞ DRONE CURSOR MICRO-INTERACTION (Top-Down Birds-Eye LERP Trail)
+ * 5. CURSOR-FOLLOWER MICRO-INTERACTIONS (LERP trail inside card bounds)
  */
-function initGokbagDroneMicroInteraction() {
-  const card = document.getElementById('gokbag-card');
-  const drone = document.getElementById('mini-drone');
-  const hud = document.getElementById('drone-hud');
+function initCursorFollower(cardId, followerId, ease, onMove) {
+  const card = document.getElementById(cardId);
+  const follower = document.getElementById(followerId);
 
-  if (!card || !drone) return;
+  if (!card || !follower) return;
 
   let targetX = 50, targetY = 50;
   let currentX = 50, currentY = 50;
   let isHovered = false;
+  let rafId = 0;
 
-  drone.style.left = `${currentX}px`;
-  drone.style.top = `${currentY}px`;
+  follower.style.left = `${currentX}px`;
+  follower.style.top = `${currentY}px`;
+
+  // Loop only runs while hovered; rafId guards against double loops on quick re-entry
+  function tick() {
+    if (!isHovered) { rafId = 0; return; }
+    currentX += (targetX - currentX) * ease;
+    currentY += (targetY - currentY) * ease;
+    follower.style.left = `${currentX}px`;
+    follower.style.top = `${currentY}px`;
+    rafId = requestAnimationFrame(tick);
+  }
 
   card.addEventListener('mouseenter', () => {
     isHovered = true;
+    if (!rafId) rafId = requestAnimationFrame(tick);
   });
 
   card.addEventListener('mouseleave', () => {
@@ -355,22 +429,20 @@ function initGokbagDroneMicroInteraction() {
     const rect = card.getBoundingClientRect();
     targetX = Math.max(20, Math.min(rect.width - 20, e.clientX - rect.left));
     targetY = Math.max(20, Math.min(rect.height - 20, e.clientY - rect.top));
-
-    if (hud) {
-      hud.textContent = `RADAR: [X:${Math.round(targetX)} Y:${Math.round(targetY)}]`;
-    }
+    if (onMove) onMove(targetX, targetY);
   });
+}
 
-  function tick() {
-    if (isHovered) {
-      currentX += (targetX - currentX) * 0.12;
-      currentY += (targetY - currentY) * 0.12;
-      drone.style.left = `${currentX}px`;
-      drone.style.top = `${currentY}px`;
-    }
-    requestAnimationFrame(tick);
-  }
-  tick();
+function initGokbagDroneMicroInteraction() {
+  const hud = document.getElementById('drone-hud');
+  initCursorFollower('gokbag-card', 'mini-drone', 0.12, (x, y) => {
+    if (hud) hud.textContent = `RADAR: [X:${Math.round(x)} Y:${Math.round(y)}]`;
+  });
+}
+
+function initPistiCardMicroInteraction() {
+  // Slower ease than the drone so the card visibly trails the cursor
+  initCursorFollower('pisti-card', 'pisti-card-follower', 0.07);
 }
 
 /**
