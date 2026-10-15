@@ -5,39 +5,34 @@
 
 Personal portfolio and interactive engineering showcase of **Eren Alsan** — M.Sc. Artificial Intelligence Engineering student at the University of Passau and Full-Stack Developer.
 
-Built with an emphasis on **zero-framework bloat**, **local-first architectures**, **tailored micro-interactions**, and an editorial **Swiss-minimalist aesthetic**.
+The site runs in **"inference mode"**: it behaves like a computer-vision model looking at its own page. A YOLO-style detection box tracks whatever you hover or tab to and labels it with a class and confidence score, and the hero portrait "locks on" with detections when the page loads.
 
 ---
 
-## 🎨 Editorial Color Palettes
+## 🎨 Design System
 
-Designed to strictly eliminate "AI Slop" visual tropes (oversaturated neon gradients, heavy glassmorphism, or generic dark modes) in favor of custom-curated, warm, and sophisticated color schemes.
+| Token | Light | Dark |
+|---|---|---|
+| Background (`Fog` / `Navy`) | `#e9ebef` | `#0e1430` |
+| Text (`Ink`) | `#14213d` | `#eceef5` |
+| Secondary text (`Slate`) | `#566079` | `#a0a8c3` |
+| Accent (`Ultramarine`) | `#2d3fe0` | `#8c9bff` |
+| Hero and contact blocks | `#2d3fe0` | `#2433c4` |
+| Detection labels (`Signal`) | `#ffd23f` | `#ffd23f` |
 
-### ☀️ Light Theme: *Nordic Slate & Warm Paper*
-- **Background (`Warm Paper`):** `#f4f4f0`
-- **Cards / Containers:** `#ffffff`
-- **Borders (`Slate`):** `#e2e8f0`
-- **Tech Badges:** `#f1f5f9`
-- **Primary Accent (`Warm Amber`):** `#d97706`
-- **Typography:** `#0f172a` / muted `#64748b`
-
-### 🌙 Dark Theme: *Deep Space Slate* (Default)
-- **Background (`Obsidian`):** `#0b0f17`
-- **Cards / Containers (`Slate Navy`):** `#161e2e`
-- **Borders (`Steel`):** `#283548`
-- **Tech Badges:** `#1e293b`
-- **Primary Accent (`Sky Blue`):** `#38bdf8`
-- **Typography:** `#f8fafc` / muted `#94a3b8`
+- **Type:** San Francisco through the system font stack (SF Pro and SF Mono on Apple devices, Inter elsewhere). Apple's licence doesn't allow self-hosting SF on the web.
+- **Section order (recruiter first):** hero with quick facts and CV, Work, Experience & education, Skills, Beyond the code (pursuits and photos), Contact.
+- **Images:** the page loads resized copies (`assets/pp-web.jpg`, `assets/photography/web/`); the full-resolution originals are kept alongside.
+- The theme follows the system setting until the visitor picks one; the choice persists via `localStorage`.
 
 ---
 
-## ✨ Features & Engineering Highlights
+## ✨ Features
 
-- **⚡ Zero-Framework Performance:** Built using pure HTML5, CSS custom properties, Tailwind CSS (via CDN), and Vanilla JavaScript for instant page loads and zero hydration overhead.
-- **🛸 Top-Down Drone LERP Follower:** A smooth, interactive top-down drone cursor-tracking effect (using LERP animation) embedded within the GÖKBAĞ Autonomous Drone project card.
-- **🖼️ Minimalframe Spotlight:** Showcases the local-first, GPU proxy-rendering photo processing engine built using Svelte, Canvas API, and Capacitor.
-- **🪟 Interactive Modal & Lightbox System:** Uniform project cards opening detailed technical architecture modals, paired with a compact, keyboard-navigable photography slideshow in the Beyond Code section.
-- **🌗 Theme Toggle with State Persistence:** Seamless switcher between *Nordic Slate & Warm Paper* and *Deep Space Slate* persisted via `localStorage`.
+- **🎯 Detector cursor:** add `data-detect="label"` (and optionally `data-conf="0.99"`) to any element to make it detectable. It also works on keyboard focus.
+- **🛸 Drone and 🂡 card followers:** LERP cursor trails inside the GÖKBAĞ and Pişti rows.
+- **🪟 Case-study modal and photo lightbox:** keyboard accessible (Esc, arrow keys), with focus returned on close.
+- **⚡ No frameworks:** plain HTML, CSS custom properties and vanilla JavaScript. Icons are inline SVG, so there are no Tailwind or icon CDNs.
 
 ---
 
@@ -47,7 +42,7 @@ Designed to strictly eliminate "AI Slop" visual tropes (oversaturated neon gradi
 erenalsan/
 ├── index.html              # Semantic DOM layout
 ├── style.css               # Custom theme variables & typography rules
-├── script.js              # Theme switcher, LERP physics, modals & overlays
+├── script.js              # Theme, detector, LERP followers, modal & lightbox
 ├── README.md               # Documentation
 └── assets/
     ├── pp.JPG              # Profile picture

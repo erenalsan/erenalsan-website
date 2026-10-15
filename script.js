@@ -2,7 +2,7 @@
 
 /**
  * EREN ALSAN PORTFOLIO — SCRIPT.JS
- * Swiss-Minimalist Precision Interactions
+ * "Inference mode": a detection box tracks whatever you hover or focus.
  */
 
 // Project Metadata Store for Full Interactive Modals
@@ -97,13 +97,14 @@ const PROJECTS_DATA = {
   },
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (window.lucide) {
-    lucide.createIcons();
-  }
+const GITHUB_ICON =
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>';
 
+document.addEventListener("DOMContentLoaded", () => {
   initThemeSwitch();
-  initMobileNav();
+  initNav();
+  initDetector();
+  initTabTitle();
   initProjectModals();
   initPhotoLightbox();
   initGokbagDroneMicroInteraction();
@@ -115,82 +116,155 @@ document.addEventListener("DOMContentLoaded", () => {
  */
 function applyTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
-  document.body.setAttribute("data-theme", theme);
-
-  if (theme === "light") {
-    document.documentElement.classList.remove("dark");
-    document.documentElement.classList.add("light");
-    document.body.classList.remove("dark");
-    document.body.classList.add("light");
-  } else {
-    document.documentElement.classList.add("dark");
-    document.documentElement.classList.remove("light");
-    document.body.classList.add("dark");
-    document.body.classList.remove("light");
+  try {
+    localStorage.setItem("theme", theme);
+  } catch (e) {
+    // Storage blocked (private mode): theme still applies for this visit
   }
-
-  localStorage.setItem("theme", theme);
-
-  // Sync icon display
-  const sunIcons = document.querySelectorAll(".theme-sun-icon");
-  const moonIcons = document.querySelectorAll(".theme-moon-icon");
-  if (theme === "light") {
-    sunIcons.forEach((i) =>
-      i.style.setProperty("display", "none", "important"),
-    );
-    moonIcons.forEach((i) =>
-      i.style.setProperty("display", "block", "important"),
-    );
-  } else {
-    sunIcons.forEach((i) =>
-      i.style.setProperty("display", "block", "important"),
-    );
-    moonIcons.forEach((i) =>
-      i.style.setProperty("display", "none", "important"),
-    );
-  }
-}
-
-function toggleTheme() {
-  const current = document.documentElement.getAttribute("data-theme") || "dark";
-  const next = current === "dark" ? "light" : "dark";
-  applyTheme(next);
 }
 
 function initThemeSwitch() {
-  const desktopBtn = document.getElementById("theme-toggle");
-  const mobileBtn = document.getElementById("mobile-theme-toggle");
-
-  if (desktopBtn) desktopBtn.addEventListener("click", toggleTheme);
-  if (mobileBtn) mobileBtn.addEventListener("click", toggleTheme);
-
-  const initial = document.documentElement.getAttribute("data-theme") || "dark";
-  applyTheme(initial);
-}
-
-/**
- * 2. MOBILE NAVIGATION DRAWER
- */
-function initMobileNav() {
-  const btn = document.getElementById("mobile-menu-btn");
-  const menu = document.getElementById("mobile-nav");
-  const links = document.querySelectorAll(".mobile-nav-link");
-
-  if (!btn || !menu) return;
-
+  const btn = document.getElementById("theme-toggle");
+  if (!btn) return;
   btn.addEventListener("click", () => {
-    menu.classList.toggle("hidden");
-  });
-
-  links.forEach((link) => {
-    link.addEventListener("click", () => {
-      menu.classList.add("hidden");
-    });
+    const current = document.documentElement.getAttribute("data-theme");
+    applyTheme(current === "dark" ? "light" : "dark");
   });
 }
 
 /**
- * 3. INTERACTIVE PROJECT MODAL OVERLAY
+ * 2. NAV: turns transparent with white text while it sits over a blue block
+ */
+function initNav() {
+  const nav = document.getElementById("site-header");
+  const blueSections = document.querySelectorAll("section.on-blue");
+  if (!nav || !blueSections.length) return;
+
+  function update() {
+    const y = nav.offsetHeight / 2;
+    const overBlue = Array.from(blueSections).some((s) => {
+      const r = s.getBoundingClientRect();
+      return r.top <= y && r.bottom >= y;
+    });
+    nav.classList.toggle("nav--on-blue", overBlue);
+  }
+
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update);
+  update();
+}
+
+/**
+ * 3. DETECTOR: YOLO-style box that tracks [data-detect] elements on hover/focus
+ */
+function confidenceFor(el) {
+  if (el.dataset.conf) return el.dataset.conf;
+  // Stable pseudo-confidence per label, 0.86–0.99
+  let h = 0;
+  for (const ch of el.dataset.detect) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return (0.86 + (h % 14) / 100).toFixed(2);
+}
+
+function initDetector() {
+  const box = document.getElementById("detector");
+  const label = box ? box.querySelector(".detector-label") : null;
+  if (!box || !label) return;
+
+  const PAD = 6;
+  let target = null;
+  let snapTimer = 0;
+
+  function place() {
+    if (!target) return;
+    const r = target.getBoundingClientRect();
+    box.style.transform = `translate(${r.left - PAD}px, ${r.top - PAD}px)`;
+    box.style.width = `${r.width + PAD * 2}px`;
+    box.style.height = `${r.height + PAD * 2}px`;
+  }
+
+  function show(el) {
+    if (el === target) return;
+    target = el;
+    label.textContent = `${el.dataset.detect} ${confidenceFor(el)}`;
+    box.classList.toggle("on-blue", !!el.closest(".on-blue"));
+    box.classList.add("is-visible");
+    place();
+  }
+
+  function hide() {
+    target = null;
+    box.classList.remove("is-visible");
+  }
+
+  document.addEventListener("pointerover", (e) => {
+    const el = e.target.closest("[data-detect]");
+    if (el) show(el);
+    else if (target) hide();
+  });
+  document.documentElement.addEventListener("pointerleave", hide);
+  document.addEventListener("focusin", (e) => {
+    const el = e.target.closest("[data-detect]");
+    if (el) show(el);
+    else hide();
+  });
+
+  // While scrolling, follow the target instantly instead of easing behind it
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!target) return;
+      box.classList.add("is-snapping");
+      place();
+      clearTimeout(snapTimer);
+      snapTimer = setTimeout(() => box.classList.remove("is-snapping"), 150);
+    },
+    { passive: true },
+  );
+  window.addEventListener("resize", place);
+
+  // Phones have no hover: lock onto whatever sits in the middle of the screen while scrolling
+  if (window.matchMedia("(hover: none)").matches) {
+    let ticking = false;
+    const scan = () => {
+      ticking = false;
+      const y = window.innerHeight / 2;
+      let best = null;
+      document.querySelectorAll("[data-detect]").forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.top <= y && r.bottom >= y && r.width > 0) {
+          // Prefer the smallest (most specific) element under the centre line
+          if (!best || r.width * r.height < best.area)
+            best = { el, area: r.width * r.height };
+        }
+      });
+      if (best) show(best.el);
+      else hide();
+    };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(scan);
+        }
+      },
+      { passive: true },
+    );
+  }
+}
+
+/**
+ * 3b. TAB TITLE: the model notices when you look away
+ */
+function initTabTitle() {
+  const original = document.title;
+  document.addEventListener("visibilitychange", () => {
+    document.title = document.hidden ? "person not detected (come back)" : original;
+  });
+}
+
+/**
+ * 4. PROJECT CASE STUDY MODAL
  */
 function initProjectModals() {
   const modal = document.getElementById("project-modal");
@@ -200,97 +274,48 @@ function initProjectModals() {
 
   if (!modal || !modalContent) return;
 
+  let previousFocus = null;
+
   function openModal(projectId) {
     const data = PROJECTS_DATA[projectId];
     if (!data) return;
 
-    let githubBtnHtml = "";
-    if (data.github) {
-      githubBtnHtml = `
-        <a href="${data.github}" target="_blank" rel="noopener noreferrer" class="btn-solid inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-mono font-medium rounded transition-all">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-          <span>View on GitHub</span>
-          <i data-lucide="external-link" class="w-3 h-3"></i>
-        </a>
-      `;
-    }
-
-    const techTagsHtml = data.stack
-      .map((s) => `<span class="tag-pill">${s}</span>`)
-      .join(" ");
-    const bulletsHtml = data.architecture
-      .map(
-        (b) => `
-      <li class="flex items-start gap-2 text-xs text-muted leading-relaxed">
-        <span class="text-accent mt-0.5 font-mono">&gt;</span>
-        <span class="text-main">${b}</span>
-      </li>
-    `,
-      )
-      .join("");
+    const githubBtnHtml = data.github
+      ? `<a href="${data.github}" target="_blank" rel="noopener noreferrer" class="btn btn-light">${GITHUB_ICON}<span style="margin-left:8px">View on GitHub</span></a>`
+      : "";
+    const bulletsHtml = data.architecture.map((b) => `<li>${b}</li>`).join("");
 
     modalContent.innerHTML = `
-      <div>
-        <div class="flex items-center justify-between gap-2 mb-2 font-mono text-[11px] text-muted">
-          <span>${data.category}</span>
-          <span class="text-accent font-medium">${data.status}</span>
-        </div>
-        <h3 id="modal-title" class="text-xl sm:text-2xl font-bold text-main tracking-tight mb-1">${data.title}</h3>
-        <p class="font-mono text-xs text-accent mb-4">${data.subtitle}</p>
-        <p class="text-xs text-muted leading-relaxed mb-4">${data.overview}</p>
-      </div>
-
-      <!-- Image Blueprint Box -->
-      <div class="rounded border card-divider p-3 bg-black/20 text-center font-mono text-[11px] text-muted">
-        <img 
-          src="${data.image}" 
-          alt="${data.title} Blueprint" 
-          class="w-full h-44 object-cover rounded mb-2"
-          onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" 
-        />
-        <div class="hidden py-10 flex flex-col items-center justify-center gap-1.5">
-          <i data-lucide="terminal" class="w-5 h-5 text-accent mb-1"></i>
-          <span class="text-main font-medium">[ARCHITECTURAL BLUEPRINT PLACEHOLDER]</span>
-          <span class="text-[10px] text-muted">${data.image}</span>
-        </div>
-      </div>
-
-      <!-- Tech Stack -->
-      <div>
-        <div class="font-mono text-[11px] text-main font-semibold mb-2 uppercase tracking-wide">Technology Stack</div>
-        <div class="flex flex-wrap gap-1.5">${techTagsHtml}</div>
-      </div>
-
-      <!-- Architectural Highlights -->
-      <div>
-        <div class="font-mono text-[11px] text-main font-semibold mb-2 uppercase tracking-wide">Key Architectural Highlights</div>
-        <ul class="space-y-2">${bulletsHtml}</ul>
-      </div>
-
-      <!-- Footer Action -->
-      <div class="pt-4 border-t card-divider flex items-center justify-between">
-        ${githubBtnHtml}
-        <button onclick="closeProjectModal()" class="btn-outline px-3.5 py-1.5 text-xs font-mono rounded cursor-pointer">
-          Close
-        </button>
-      </div>
+      <p class="modal-kind">${data.category}<span class="badge modal-status">${data.status}</span></p>
+      <h3 id="modal-title" class="modal-title">${data.title}</h3>
+      <p class="modal-sub">${data.subtitle}</p>
+      <p class="modal-text">${data.overview}</p>
+      <figure class="modal-figure">
+        <img src="${data.image}" alt="${data.title} screenshot" onerror="this.parentElement.remove()" />
+      </figure>
+      <h4 class="modal-h">How it works</h4>
+      <ul class="modal-list">${bulletsHtml}</ul>
+      <h4 class="modal-h">Built with</h4>
+      <p class="modal-stack">${data.stack.join(", ")}</p>
+      <div class="modal-actions">${githubBtnHtml}</div>
     `;
 
+    previousFocus = document.activeElement;
     modal.classList.remove("hidden");
     document.body.style.overflow = "hidden";
-
-    if (window.lucide) lucide.createIcons();
+    if (closeBtn) closeBtn.focus();
   }
 
   window.closeProjectModal = function () {
     modal.classList.add("hidden");
     document.body.style.overflow = "";
+    if (previousFocus && typeof previousFocus.focus === "function")
+      previousFocus.focus();
   };
 
-  document.querySelectorAll(".project-card[data-project]").forEach((card) => {
+  document.querySelectorAll("[data-project]").forEach((card) => {
     card.addEventListener("click", () => {
-      const pId = card.getAttribute("data-project");
-      openModal(pId);
+      openModal(card.getAttribute("data-project"));
     });
     card.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
@@ -311,7 +336,7 @@ function initProjectModals() {
 }
 
 /**
- * 4. PHOTOGRAPHY LIGHTBOX
+ * 5. PHOTOGRAPHY LIGHTBOX
  */
 function initPhotoLightbox() {
   const lightbox = document.getElementById("lightbox-modal");
@@ -322,27 +347,26 @@ function initPhotoLightbox() {
   const closeBtn = document.getElementById("lightbox-close-btn");
   const prevBtn = document.getElementById("lightbox-prev-btn");
   const nextBtn = document.getElementById("lightbox-next-btn");
-  const openVisualsBtn = document.getElementById("open-visuals-btn");
   const backdrop = lightbox
     ? lightbox.querySelector(".lightbox-backdrop")
     : null;
   const slides = [
     {
-      src: "assets/photography/photo1.jpg",
+      src: "assets/photography/web/photo1.jpg",
       alt: "Santuario della Beata Vergine del Rosario di Pompei framed by foliage",
       caption: "Architectural Perspectives • Pompei, Italy",
       fallback:
         "Italian Architectural Study\nPompei • Italy\nISO 100 • 50mm • f/4.0",
     },
     {
-      src: "assets/photography/photo2.jpg",
+      src: "assets/photography/web/photo2.jpg",
       alt: "Vintage car driving through historic street in Passau",
       caption: "Bavarian Street Dynamics • Passau, Germany",
       fallback:
         "Bavaria Architectural Study\nPassau • Germany\nISO 200 • 35mm • f/2.8",
     },
     {
-      src: "assets/photography/photo3.jpg",
+      src: "assets/photography/web/photo3.jpg",
       alt: "Black cat sitting on a carpeted fishing boat at Foça harbor",
       caption: "Aegean Marine Solitude • Foça, Turkey",
       fallback:
@@ -414,8 +438,11 @@ function initPhotoLightbox() {
     showSlide(currentIndex + 1);
   }
 
-  if (openVisualsBtn)
-    openVisualsBtn.addEventListener("click", () => openLightbox(0));
+  document.querySelectorAll("[data-slide]").forEach((btn) => {
+    btn.addEventListener("click", () =>
+      openLightbox(Number(btn.getAttribute("data-slide"))),
+    );
+  });
   if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
   if (prevBtn) prevBtn.addEventListener("click", showPreviousSlide);
   if (nextBtn) nextBtn.addEventListener("click", showNextSlide);
@@ -430,7 +457,7 @@ function initPhotoLightbox() {
 }
 
 /**
- * 5. CURSOR-FOLLOWER MICRO-INTERACTIONS (LERP trail inside card bounds)
+ * 6. CURSOR-FOLLOWER MICRO-INTERACTIONS (LERP trail inside card bounds)
  */
 function initCursorFollower(cardId, followerId, ease, onMove) {
   const card = document.getElementById(cardId);
@@ -481,7 +508,7 @@ function initCursorFollower(cardId, followerId, ease, onMove) {
 function initGokbagDroneMicroInteraction() {
   const hud = document.getElementById("drone-hud");
   initCursorFollower("gokbag-card", "mini-drone", 0.12, (x, y) => {
-    if (hud) hud.textContent = `RADAR: [X:${Math.round(x)} Y:${Math.round(y)}]`;
+    if (hud) hud.textContent = `tracking x ${Math.round(x)} y ${Math.round(y)}`;
   });
 }
 
@@ -491,7 +518,7 @@ function initPistiCardMicroInteraction() {
 }
 
 /**
- * 6. EMAIL COPY TRIGGER WITH TOAST
+ * 7. EMAIL COPY TRIGGER WITH TOAST
  */
 window.copyEmail = async function () {
   const emailEl = document.getElementById("contact-email");
@@ -517,9 +544,9 @@ window.copyEmail = async function () {
     document.body.removeChild(input);
   }
 
-  if (copyLabel) copyLabel.textContent = "Copied!";
+  if (copyLabel) copyLabel.textContent = "Copied";
   if (toast) {
-    if (toastText) toastText.textContent = `Copied ${email} to clipboard!`;
+    if (toastText) toastText.textContent = `Copied ${email}. Confidence you'll write: 1.00`;
     toast.classList.remove("toast-hidden");
     toast.classList.add("toast-visible");
 
@@ -530,6 +557,6 @@ window.copyEmail = async function () {
   }
 
   setTimeout(() => {
-    if (copyLabel) copyLabel.textContent = "Copy";
+    if (copyLabel) copyLabel.textContent = "Copy email";
   }, 2200);
 };
