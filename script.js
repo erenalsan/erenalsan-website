@@ -1308,7 +1308,7 @@ function initHeroScene() {
       ? []
       : [0, 1, 2].map((i) => ({ x: rand() * W, y: Math.round(hz * (0.2 + rand() * 0.35)), v: 0.3 + rand() * 0.25, p: i * 3 }));
 
-    L = { c, night, narrow, hz, cx, CW, ty, by, wx, wingW, brickH, orbX, back, front, clouds, stars, gulls };
+    L = { c, night, hz, cx, CW, ty, by, wx, wingW, brickH, orbX, back, front, clouds, stars, gulls };
     if (!boatX) boatX = Math.round(W * 0.15);
   }
 
@@ -1329,17 +1329,19 @@ function initHeroScene() {
       ctx.drawImage(cl.img, Math.round(x), cl.y);
     });
 
-    // Moving glints on the water, denser in the sun/moon path
-    // Kept faint and sparse: bright flicker on the water is tiring to look at
-    ctx.fillStyle = c.glint;
-    ctx.globalAlpha = 0.5;
+    // The only light on the water: the sun or moon's reflection, a broken column under it
+    // that widens with depth, sways with the waves and fades toward the shore
+    ctx.fillStyle = L.night ? c.orb[0] : c.orb[1]; // pale moonlight, golden sunlight
     const seaEnd = H - L.brickH;
-    const gw = L.narrow ? 1 : 2;
-    for (let y = hz + 2; y < seaEnd; y += 2) {
-      for (let x = (y * 7) % 9; x < W; x += 9) {
-        const near = Math.abs(x - L.orbX) < 3 + (y - hz) / 6;
-        if ((x * 7 + y * 13 + frame) % (near ? 13 : 61) === 0) ctx.fillRect(x, y, gw, 1);
-      }
+    const depth = Math.max(1, seaEnd - hz);
+    for (let y = hz + 1; y < seaEnd; y += 2) {
+      if ((y + (frame >> 1)) % 7 === 0) continue; // gaps between ripples drift down
+      const t = (y - hz) / depth;
+      const half = Math.round(1.5 + t * 5 + Math.sin((y + frame) * 0.7) * 1.5);
+      if (half <= 0) continue;
+      const sway = Math.round(Math.sin(frame * 0.3 + y * 0.5));
+      ctx.globalAlpha = 0.5 * (1 - t * 0.65);
+      ctx.fillRect(L.orbX - half + sway, y, half * 2, 1);
     }
     ctx.globalAlpha = 1;
 
