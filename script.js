@@ -184,7 +184,24 @@ function initViews() {
   const views = Array.from(document.querySelectorAll(".view"));
   const tabs = document.querySelectorAll("[data-tab]");
   const next = document.getElementById("next-level");
+  const nav = document.getElementById("site-header");
+  const footer = document.querySelector(".footer");
   if (!views.length) return;
+
+  // Real header/footer heights, so the overview scene can run underneath them
+  const measure = () => {
+    const root = document.documentElement.style;
+    if (nav) root.setProperty("--nav-real", `${nav.offsetHeight}px`);
+    if (footer) root.setProperty("--foot-real", `${footer.offsetHeight}px`);
+  };
+  if ("ResizeObserver" in window) {
+    const ro = new ResizeObserver(measure);
+    if (nav) ro.observe(nav);
+    if (footer) ro.observe(footer);
+  } else {
+    window.addEventListener("resize", measure);
+  }
+  measure();
 
   function route() {
     const id = decodeURIComponent(location.hash.slice(1));
@@ -217,6 +234,10 @@ function initViews() {
       next.href = `#${to.id}`;
       next.textContent = i + 1 < views.length ? `Next level: ${num} ${name} →` : `Play again: 01 ${name} ↺`;
     }
+
+    // Overview: header and footer turn to glass over the scene (and the detector uses its on-blue colours there)
+    document.body.dataset.view = view.id;
+    if (nav) nav.classList.toggle("on-blue", view.id === "overview");
 
     track("tab", view.id, views.length, "explorer");
     document.dispatchEvent(new CustomEvent("viewchange", { detail: view.id }));
@@ -384,12 +405,21 @@ function showOverlay(el) {
   void el.offsetWidth;
   el.classList.add("is-open");
   document.dispatchEvent(new CustomEvent("overlayopen"));
+  // A history entry per popup, so the phone's back button/gesture closes it instead of leaving the page
+  if (!history.state || history.state.overlay !== el.id) history.pushState({ overlay: el.id }, "");
 }
 
 function hideOverlay(el) {
   el.classList.remove("is-open");
   el._hideTimer = setTimeout(() => el.classList.add("hidden"), 60);
+  // Closed with a button, Esc or the backdrop: drop the entry we pushed
+  if (history.state && history.state.overlay === el.id) history.back();
 }
+
+// Back pressed while a popup is open: ask it to close the same way its close button would
+window.addEventListener("popstate", () => {
+  document.querySelectorAll(".overlay.is-open").forEach((el) => el.dispatchEvent(new CustomEvent("overlayclose")));
+});
 
 /**
  * 4. PROJECT CASE STUDY MODAL
@@ -476,6 +506,7 @@ function initProjectModals() {
   });
 
   if (closeBtn) closeBtn.addEventListener("click", window.closeProjectModal);
+  modal.addEventListener("overlayclose", window.closeProjectModal);
   if (backdrop) backdrop.addEventListener("click", window.closeProjectModal);
 
   const dialog = modal.querySelector(".modal-dialog");
@@ -601,6 +632,7 @@ function initPhotoLightbox() {
     );
   });
   if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
+  lightbox.addEventListener("overlayclose", closeLightbox);
   if (prevBtn) prevBtn.addEventListener("click", showPreviousSlide);
   if (nextBtn) nextBtn.addEventListener("click", showNextSlide);
   if (backdrop) backdrop.addEventListener("click", closeLightbox);
@@ -1372,11 +1404,8 @@ function initHeroScene() {
     }).observe(hero);
   }
   if ("ResizeObserver" in window) {
-    let pending = 0;
-    new ResizeObserver(() => {
-      cancelAnimationFrame(pending);
-      pending = requestAnimationFrame(resize);
-    }).observe(hero);
+    // Resize inside the observer callback (it runs before paint), so the scene never shows a stale size
+    new ResizeObserver(() => resize()).observe(hero);
   } else {
     window.addEventListener("resize", resize);
   }

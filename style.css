@@ -1217,6 +1217,9 @@ html.js .cv-lock::after  { animation: ctaTag 4s var(--ease-out) 2.4s both; }
   .view:not(.view-split) { display: flex; flex-direction: column; }
   .view > .section, .hero, .contact { flex: 1; min-height: 0; }
   .hero, .contact { min-height: 100%; }
+  /* Footer floats over the bottom of the scene on the overview */
+  body[data-view="overview"] .footer { position: fixed; inset: auto 0 0 0; }
+  body[data-view="overview"] .hero { padding-bottom: calc(var(--foot-real, 2.5rem) + var(--vpad)); }
   .portrait { width: auto; height: min(44vh, 20rem); }
 
   /* Lab: arena takes the height that's left */
@@ -1230,6 +1233,32 @@ html.js .cv-lock::after  { animation: ctaTag 4s var(--ease-out) 2.4s both; }
   .photo-b, .photo-c { display: flex; flex-direction: column; min-height: 0; }
   .photo-b .photo-btn, .photo-c .photo-btn { flex: 1; min-height: 0; aspect-ratio: auto; }
   .photo-a .photo-btn { min-height: 0; }
+}
+
+/* --- Overview: the scene runs edge to edge, under a glass header and footer --- */
+body[data-view="overview"] { background-color: var(--hero); }
+body[data-view="overview"] .nav,
+body[data-view="overview"] .footer {
+  background: rgba(10, 16, 48, 0.28);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+body[data-view="overview"] .nav { position: fixed; inset: 0 0 auto 0; }
+body[data-view="overview"] .tabs { border-color: rgba(255, 255, 255, 0.16); }
+body[data-view="overview"] .tab { color: rgba(255, 255, 255, 0.75); }
+body[data-view="overview"] .tab:hover,
+body[data-view="overview"] .tab[aria-current="page"] { color: #fff; }
+body[data-view="overview"] .tab[aria-current="page"] { border-bottom-color: var(--signal); }
+body[data-view="overview"] .tab-num,
+body[data-view="overview"] .next-level { color: var(--signal); }
+body[data-view="overview"] .nav-cv { background: #fff; color: #14213d; }
+body[data-view="overview"] .nav-cv:hover { background: var(--signal); }
+body[data-view="overview"] .xp-hud:hover { color: var(--signal); }
+body[data-view="overview"] .hero {
+  min-height: 100svh;
+  padding-top: calc(var(--nav-real, var(--header-h)) + var(--vpad));
 }
 
 /* --- Responsive --- */
