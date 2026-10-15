@@ -20,15 +20,26 @@ const PROJECTS_DATA = {
       "Capacitor",
       "HTML5 Canvas API",
       "JSZip",
+      "exifr",
       "JavaScript (ES6+)",
     ],
     overview:
       "Engineered a 100% local (offline-first), privacy-centric cross-platform photo editing and framing engine built for professional photographers with zero server dependencies.",
     architecture: [
-      "Implemented a proxy-rendering architecture to eliminate mobile/low-end device bottlenecks, processing 24MP+ RAW/JPEG previews with GPU hardware acceleration to maintain a smooth 60fps UI experience.",
-      "Developed a custom HTML5 Canvas rendering engine featuring dynamic aspect ratio calculations, automatic EXIF metadata parsing (camera model, focal length, aperture, shutter speed), typographic overlays, and custom watermark integration.",
-      "Built an in-memory batch export pipeline using JSZip for one-click multi-image processing alongside a persistent preset system backed by localStorage.",
-      "Packaged the zero-bloat web codebase into an optimized native Android application (.apk) using Capacitor.",
+      "<strong>File parsing &amp; RAW processing.</strong> Local-first ingestion of JPEG/PNG and RAW (.arw, .cr2) files, with exifr extracting EXIF metadata and auto-fixing orientation.",
+      "<strong>Reactive state.</strong> A central Svelte store holds presets, color palettes and margin settings, persisted locally through localStorage.",
+      "<strong>Dual-mode editor &amp; effects engine.</strong> A Photo Editor tab for color and light tweaks (effectsEngine.js adds Film Grain and Soft Bloom) and a Frame &amp; EXIF tab for margins, typography and logos.",
+      "<strong>Proxy rendering.</strong> Editing happens on a low-res, GPU-accelerated preview canvas for zero-lag feedback; a full-resolution off-screen canvas only runs on export, keeping memory use low on 24MP+ files.",
+      "<strong>Output &amp; batching.</strong> Instant single JPEG downloads, plus an in-browser JSZip pipeline that renders many photos into one ZIP.",
+      "Packaged the zero-bloat web codebase into a native Android application (.apk) using Capacitor.",
+    ],
+    // Rendered as the pipeline diagram in the modal. Strings are edges, objects are nodes.
+    pipeline: [
+      { layer: "File parsing", flow: [{ name: "Image input", detail: "JPEG / PNG / RAW" }, "→", { name: "Format check" }, "→", { name: "rawEngine.js", detail: "RAW decode + orientation" }, "→", { name: "exifr", detail: "EXIF parser" }], note: "JPEG and PNG skip the RAW decoder and go straight to exifr." },
+      { layer: "State & persistence", flow: [{ name: "Core app state", detail: "Svelte reactivity" }, "⇄", { name: "localStorage", detail: "saved presets" }] },
+      { layer: "Dual-mode interface", flow: [{ name: "Photo Editor tab" }, "⇄", { name: "effectsEngine.js", detail: "film grain + bloom" }, "|", { name: "Frame & EXIF tab" }], note: "Both tabs read from and write to the core state." },
+      { layer: "Proxy rendering", flow: [{ name: "Live preview canvas", detail: "low-res proxy" }, "⇢", { name: "Off-screen canvas", detail: "full-res, on export" }], note: "Settings are synced from the preview to the full-res canvas." },
+      { layer: "Output", flow: [{ name: "Single export", detail: "JPEG" }, "|", { name: "Batch engine", detail: "JSZip" }, "→", { name: "ZIP download", detail: "framed photos" }] },
     ],
   },
   gokbag: {
@@ -42,9 +53,18 @@ const PROJECTS_DATA = {
     overview:
       "AI-powered tactical drone system designed for aerial reconnaissance, autonomous search-and-rescue navigation, and real-time object tracking.",
     architecture: [
-      "Trained and optimized custom YOLO models for aerial friend-or-foe classification under varying light and thermal conditions.",
-      "Integrated OpenCV video pipelines for real-time edge bounding box prediction with sub-50ms inference latency.",
-      "Built robust fail-safe autonomous return-to-home procedures and GPS-waypoint tracking algorithms.",
+      "<strong>Frame ingestion &amp; preprocessing.</strong> Low-latency RTSP/camera capture through OpenCV, with frames resized and normalized to balance inference speed and detection accuracy on constrained hardware.",
+      "<strong>YOLO object detection.</strong> A real-time deep learning pipeline that outputs bounding boxes and confidence scores for personnel, vehicles and objects.",
+      "<strong>Friend-or-foe identification.</strong> A second classification pass reads visual markers to sort each detection into friendly units or active threats.",
+      "<strong>Target tracking &amp; LERP.</strong> Centroid/SORT tracking predicts motion vectors and computes the target's offset (dx, dy) from frame center, which LERP interpolation turns into a smooth camera lock-on.",
+      "<strong>Fail-safe state machine.</strong> On signal loss or jamming the drone hovers through a timeout window waiting for the link to recover. If it doesn't, it returns to launch along recorded GPS waypoints when battery is above 20%, or runs an emergency optical landing when GPS is degraded.",
+    ],
+    pipeline: [
+      { layer: "Real-time perception", flow: [{ name: "Camera stream", detail: "RTSP" }, "→", { name: "OpenCV", detail: "preprocessing" }, "→", { name: "YOLO", detail: "target detector" }, "→", { name: "Friend-or-foe", detail: "FFI check" }], note: "Friendly units are logged and ignored; targets go on to tracking." },
+      { layer: "Tracking", flow: [{ name: "Target tracking", detail: "centroid / SORT" }, "→", { name: "LERP engine", detail: "dx, dy lock-on" }] },
+      { layer: "Fail-safe", flow: [{ name: "Signal status" }, "→", { name: "Hover & timeout", detail: "signal lost / jammed" }, "→", { name: "GPS & battery check" }], note: "If the link doesn't come back, the check picks the recovery mode below." },
+      { layer: "Recovery", flow: [{ name: "Return to launch", detail: "GPS OK, battery > 20%" }, "|", { name: "Optical auto-land", detail: "low battery / GPS lost" }] },
+      { layer: "Flight control", flow: [{ name: "Autonomous flight control", detail: "tracking + recovery commands" }] },
     ],
   },
   "credit-ml": {
@@ -109,7 +129,33 @@ document.addEventListener("DOMContentLoaded", () => {
   initPhotoLightbox();
   initGokbagDroneMicroInteraction();
   initPistiCardMicroInteraction();
+  initReveal();
 });
+
+/**
+ * SCROLL REVEAL: elements marked data-reveal (and the timeline line) fade up once as they enter.
+ */
+function initReveal() {
+  const targets = document.querySelectorAll("[data-reveal], [data-reveal-line]");
+  if (!("IntersectionObserver" in window)) {
+    targets.forEach((el) => el.classList.add("is-visible"));
+    return;
+  }
+  const io = new IntersectionObserver(
+    (entries) => {
+      // Stagger only the elements that enter together, so a lone row never waits
+      entries
+        .filter((e) => e.isIntersecting)
+        .forEach((e, i) => {
+          e.target.style.transitionDelay = `${Math.min(i, 5) * 60}ms`;
+          e.target.classList.add("is-visible");
+          io.unobserve(e.target);
+        });
+    },
+    { rootMargin: "0px 0px -8% 0px" }
+  );
+  targets.forEach((el) => io.observe(el));
+}
 
 /**
  * 1. THEME SWITCHER (Dark / Light with LocalStorage Persistence)
@@ -258,11 +304,21 @@ function initDetector() {
  */
 function initTabTitle() {
   const original = document.title;
+  let resetTimeout = null;
+
   document.addEventListener("visibilitychange", () => {
-    document.title = document.hidden ? "person not detected (come back)" : original;
+    if (document.hidden) {
+      if (resetTimeout) clearTimeout(resetTimeout);
+      document.title = "[TARGET_LOST] Out of frame...";
+    } else {
+      document.title = "[TARGET_FOUND] Tracking restored...";
+      
+      resetTimeout = setTimeout(() => {
+        document.title = original;
+      }, 1500);
+    }
   });
 }
-
 /**
  * 4. PROJECT CASE STUDY MODAL
  */
@@ -284,6 +340,24 @@ function initProjectModals() {
       ? `<a href="${data.github}" target="_blank" rel="noopener noreferrer" class="btn btn-light">${GITHUB_ICON}<span style="margin-left:8px">View on GitHub</span></a>`
       : "";
     const bulletsHtml = data.architecture.map((b) => `<li>${b}</li>`).join("");
+    const pipelineHtml = data.pipeline
+      ? `<h4 class="modal-h">Pipeline</h4>
+        <ol class="pipeline">${data.pipeline
+          .map(
+            (s) => `<li class="pipe-stage">
+              <p class="pipe-layer">${s.layer}</p>
+              <div class="pipe-flow">${s.flow
+                .map((n) =>
+                  typeof n === "string"
+                    ? `<span class="pipe-edge" aria-hidden="true">${n}</span>`
+                    : `<span class="pipe-node">${n.name}${n.detail ? `<small>${n.detail}</small>` : ""}</span>`
+                )
+                .join("")}</div>
+              ${s.note ? `<p class="pipe-note">${s.note}</p>` : ""}
+            </li>`
+          )
+          .join("")}</ol>`
+      : "";
 
     modalContent.innerHTML = `
       <p class="modal-kind">${data.category}<span class="badge modal-status">${data.status}</span></p>
@@ -295,6 +369,7 @@ function initProjectModals() {
       </figure>
       <h4 class="modal-h">How it works</h4>
       <ul class="modal-list">${bulletsHtml}</ul>
+      ${pipelineHtml}
       <h4 class="modal-h">Built with</h4>
       <p class="modal-stack">${data.stack.join(", ")}</p>
       <div class="modal-actions">${githubBtnHtml}</div>

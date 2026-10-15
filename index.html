@@ -20,6 +20,7 @@
       try { saved = localStorage.getItem('theme'); } catch (e) {}
       var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.classList.add('js'); // gates entrance/reveal styles so no-JS visitors see everything
     })();
   </script>
 </head>
@@ -60,7 +61,7 @@
           <div><dt>Experience</dt><dd>Freelance full-stack since 2024, three internships</dd></div>
         </dl>
         <div class="hero-actions">
-          <a href="assets/Eren_Alsan_CV.pdf" download="Eren_Alsan_CV.pdf" class="btn btn-light" data-detect="resume" data-conf="0.99">Download CV</a>
+          <a href="assets/Eren_Alsan_CV.pdf" download="Eren_Alsan_CV.pdf" class="btn btn-light cv-lock" data-detect="resume" data-conf="0.99">Download CV</a>
           <a href="mailto:eren.alsan@outlook.com" class="btn btn-ghost" data-detect="contact" data-conf="0.99">Email me</a>
           <a href="https://github.com/erenalsan" target="_blank" rel="noopener noreferrer" class="hero-link" data-detect="github">GitHub</a>
           <a href="https://www.linkedin.com/in/eren-alsan-3b159a225/" target="_blank" rel="noopener noreferrer" class="hero-link" data-detect="linkedin">LinkedIn</a>
@@ -81,7 +82,7 @@
 
     <!-- WORK -->
     <section id="work" class="section">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <h2 class="section-title">Work</h2>
         <p class="section-intro">Five systems I've built, from perception models to software that real businesses run on. Open one to see how it works.</p>
       </div>
@@ -89,7 +90,7 @@
       <div class="work-list">
 
         <!-- GÖKBAĞ -->
-        <article id="gokbag-card" class="work-row" data-project="gokbag" data-detect="drone" tabindex="0" role="button" aria-haspopup="dialog" aria-label="GÖKBAĞ autonomous drone, open case study">
+        <article data-reveal id="gokbag-card" class="work-row" data-project="gokbag" data-detect="drone" tabindex="0" role="button" aria-haspopup="dialog" aria-label="GÖKBAĞ autonomous drone, open case study">
           <svg class="row-mark" viewBox="0 0 150 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="75" cy="75" r="65"/><circle cx="75" cy="75" r="45"/><circle cx="75" cy="75" r="25"/>
             <path d="M75 0v150M0 75h150" stroke-width="1"/>
@@ -113,7 +114,7 @@
           </div>
           <div class="row-main">
             <h3 class="row-title">GÖKBAĞ</h3>
-            <p class="row-desc">Software for an autonomous military support drone: it tracks objects and identifies friend or foe in real time.</p>
+            <p class="row-desc">Software for an autonomous military support drone: it tracks objects and identifies friend or foe in real time, and falls back to return-to-launch or auto-landing when the link drops.</p>
           </div>
           <div class="row-meta">
             <p class="row-kind">Computer vision, defense AI</p>
@@ -122,7 +123,7 @@
         </article>
 
         <!-- Credit ML -->
-        <article class="work-row" data-project="credit-ml" data-detect="classifier" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Credit eligibility model, open case study">
+        <article data-reveal class="work-row" data-project="credit-ml" data-detect="classifier" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Credit eligibility model, open case study">
           <svg class="row-mark" viewBox="0 0 150 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M15 135V15M15 135h120"/>
             <path d="M20 125C55 110 75 70 135 45" stroke-dasharray="4 4"/>
@@ -145,7 +146,7 @@
         </article>
 
         <!-- Minimalframe -->
-        <article class="work-row" data-project="minimalframe" data-detect="photo engine" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Minimalframe, open case study">
+        <article data-reveal class="work-row" data-project="minimalframe" data-detect="photo engine" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Minimalframe, open case study">
           <svg class="row-mark" viewBox="0 0 150 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M10 40V10h30M110 10h30v30M140 110v30h-30M40 140H10v-30"/>
             <circle cx="75" cy="75" r="42"/>
@@ -154,16 +155,16 @@
           </svg>
           <div class="row-main">
             <h3 class="row-title">Minimalframe</h3>
-            <p class="row-desc">A photo processing and framing engine that runs entirely on your device, as a web app and on Android.</p>
+            <p class="row-desc">A photo processing and framing engine that runs entirely on your device, as a web app and on Android. RAW support, proxy rendering for lag-free editing, and batch export.</p>
           </div>
           <div class="row-meta">
             <p class="row-kind"><span class="badge">In progress</span></p>
-            <p class="row-stack">Svelte, Vite, Capacitor, Canvas API, JSZip</p>
+            <p class="row-stack">Svelte, Vite, Capacitor, Canvas API, JSZip, exifr</p>
           </div>
         </article>
 
         <!-- Universal Polymer & Vita Global -->
-        <article class="work-row" data-project="enterprise-apex" data-detect="erp system" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Universal Polymer and Vita Global Services, open case study">
+        <article data-reveal class="work-row" data-project="enterprise-apex" data-detect="erp system" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Universal Polymer and Vita Global Services, open case study">
           <svg class="row-mark" viewBox="0 0 150 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <rect x="15" y="15" width="30" height="30" rx="3"/><rect x="60" y="15" width="30" height="30" rx="3"/><rect x="105" y="15" width="30" height="30" rx="3"/>
             <rect x="15" y="60" width="30" height="30" rx="3"/><rect x="105" y="60" width="30" height="30" rx="3"/>
@@ -182,7 +183,7 @@
         </article>
 
         <!-- Unity Pişti -->
-        <article id="pisti-card" class="work-row" data-project="unity-pisti" data-detect="card game" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Unity Pişti game, open case study">
+        <article data-reveal id="pisti-card" class="work-row" data-project="unity-pisti" data-detect="card game" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Unity Pişti game, open case study">
           <svg class="row-mark" viewBox="0 0 150 150" fill="currentColor" font-family="Georgia, serif" aria-hidden="true">
             <text x="18" y="58" font-size="44">&spades;</text>
             <text x="88" y="48" font-size="36">&hearts;</text>
@@ -215,31 +216,31 @@
 
     <!-- EXPERIENCE -->
     <section id="experience" class="section">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <h2 class="section-title">Experience &amp; education</h2>
         <p class="section-intro">Computer engineer by training, AI engineer by choice. Real clients since 2024, an AI master's in progress.</p>
       </div>
       <div class="experience-body">
-          <ol class="path">
-            <li data-detect="degree">
+          <ol class="path" data-reveal-line>
+            <li data-reveal data-detect="degree">
               <span class="path-year">2024 to now</span>
               <strong class="path-what">M.Sc. Artificial Intelligence Engineering</strong>
               <span class="path-where">University of Passau, Germany</span>
               <p>Deep learning, computer vision, autonomous neural architectures and edge deployment.</p>
             </li>
-            <li data-detect="job">
+            <li data-reveal data-detect="job">
               <span class="path-year">2024 to now</span>
               <strong class="path-what">Freelance full-stack developer</strong>
               <span class="path-where">Universal Polymer and Vita Global Services</span>
-              <p>Production Oracle APEX systems, automated inventory margins, WhatsApp API notifications and mission-critical database work.</p>
+              <p>Production Oracle APEX systems, automated inventory margins, WhatsApp API notifications, and the Oracle SQL behind daily orders and invoices.</p>
             </li>
-            <li data-detect="degree">
+            <li data-reveal data-detect="degree">
               <span class="path-year">2020 to 2024</span>
               <strong class="path-what">B.Sc. Computer Engineering</strong>
               <span class="path-where">TED University, Ankara, Turkey</span>
               <p>Data structures, algorithms, operating systems, database systems and network architecture.</p>
             </li>
-            <li data-detect="internship">
+            <li data-reveal data-detect="internship">
               <span class="path-year">2022 to 2023</span>
               <strong class="path-what">Engineering internships</strong>
               <span class="path-where">Digitoy Games, TED Ankara College, Teknokom Electronics</span>
@@ -252,50 +253,50 @@
 
     <!-- SKILLS -->
     <section id="skills" class="section">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <h2 class="section-title">Skills</h2>
         <p class="section-intro">What I reach for, from training a detector to shipping the app around it.</p>
       </div>
       <dl class="skills-grid">
-        <div data-detect="ai skills"><dt>AI and vision</dt><dd>YOLO, OpenCV, scikit-learn, NumPy, pandas, neural networks</dd></div>
-        <div data-detect="languages"><dt>Languages</dt><dd>Python, C#, JavaScript, Java, C and C++, SQL and PL/SQL</dd></div>
-        <div data-detect="frameworks"><dt>Web and mobile</dt><dd>Svelte, Capacitor, .NET 7, Oracle APEX, Canvas API, Unity</dd></div>
-        <div data-detect="infrastructure"><dt>Data and infrastructure</dt><dd>PostgreSQL, Oracle SQL, REST APIs, Docker, Linux, Git</dd></div>
+        <div data-reveal data-detect="ai skills"><dt>AI and vision</dt><dd>YOLO, OpenCV, scikit-learn, NumPy, pandas, neural networks</dd></div>
+        <div data-reveal data-detect="languages"><dt>Languages</dt><dd>Python, C#, JavaScript, Java, C and C++, SQL and PL/SQL</dd></div>
+        <div data-reveal data-detect="frameworks"><dt>Web and mobile</dt><dd>Svelte, Capacitor, .NET 7, Oracle APEX, Canvas API, Unity</dd></div>
+        <div data-reveal data-detect="infrastructure"><dt>Data and infrastructure</dt><dd>PostgreSQL, Oracle SQL, REST APIs, Docker, Linux, Git</dd></div>
       </dl>
     </section>
 
     <!-- BEYOND THE CODE -->
     <section id="beyond" class="section">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <h2 class="section-title">Beyond the code</h2>
         <p class="section-intro">Thirteen years of ice hockey and a lot of time underwater shaped how I work under pressure. Photography is why I started building Minimalframe.</p>
       </div>
       <div class="pursuits">
-          <div class="pursuit" data-detect="hockey player">
-            <h4 class="pursuit-title">Ice hockey, 13 years</h4>
+          <div class="pursuit" data-reveal data-detect="hockey player">
+            <h3 class="pursuit-title">Ice hockey, 13 years</h3>
             <p>Over a decade of high-speed, full-contact team hockey taught me real-time awareness, quick decisions under physical pressure, and accountability to a team.</p>
           </div>
-          <div class="pursuit" data-detect="freediver">
-            <h4 class="pursuit-title">Freediving and spearfishing</h4>
+          <div class="pursuit" data-reveal data-detect="freediver">
+            <h3 class="pursuit-title">Freediving and spearfishing</h3>
             <p>Breath-hold diving demands physiological control, calm under hypoxic stress and sharp focus. Underwater, patience and calculated risk aren't optional.</p>
           </div>
       </div>
       <div class="photo-grid">
-        <figure class="photo photo-a">
+        <figure data-reveal class="photo photo-a">
           <button type="button" class="photo-btn" data-slide="0" data-detect="church" aria-label="Open photo: sanctuary in Pompei, Italy">
             <img src="assets/photography/web/photo1.jpg" alt="Santuario della Beata Vergine del Rosario di Pompei framed by foliage" loading="lazy"
                  onerror="this.replaceWith(Object.assign(document.createElement('span'), {className: 'photo-missing', textContent: 'Photo unavailable'}));" />
           </button>
           <figcaption>Pompei, Italy</figcaption>
         </figure>
-        <figure class="photo photo-b">
+        <figure data-reveal class="photo photo-b">
           <button type="button" class="photo-btn" data-slide="1" data-detect="car" aria-label="Open photo: vintage car in Passau, Germany">
             <img src="assets/photography/web/photo2.jpg" alt="Vintage car driving through a historic street in Passau" loading="lazy"
                  onerror="this.replaceWith(Object.assign(document.createElement('span'), {className: 'photo-missing', textContent: 'Photo unavailable'}));" />
           </button>
           <figcaption>Passau, Germany</figcaption>
         </figure>
-        <figure class="photo photo-c">
+        <figure data-reveal class="photo photo-c">
           <button type="button" class="photo-btn" data-slide="2" data-detect="cat" aria-label="Open photo: cat on a fishing boat in Foça, Turkey">
             <img src="assets/photography/web/photo3.jpg" alt="Black cat sitting on a carpeted fishing boat at Foça harbor" loading="lazy"
                  onerror="this.replaceWith(Object.assign(document.createElement('span'), {className: 'photo-missing', textContent: 'Photo unavailable'}));" />

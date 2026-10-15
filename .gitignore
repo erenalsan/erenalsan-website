@@ -1,0 +1,19 @@
+# AI & Local Assistant Workspaces
+.agents/
+.claude/
+.gemini/
+.impeccable/
+
+# AI Lockfiles & Local Settings
+settings.local.json
+skills-lock.json
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
