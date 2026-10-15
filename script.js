@@ -197,7 +197,8 @@ function initViews() {
       else t.removeAttribute("aria-current");
     });
 
-    if (target && target !== view) target.scrollIntoView({ behavior: "instant" });
+    view.scrollTop = 0;
+    if (target && target !== view) target.scrollIntoView({ behavior: "instant", block: "nearest" });
     else window.scrollTo({ top: 0, behavior: "instant" });
     revealNow(view);
 
@@ -297,7 +298,7 @@ function initDetector() {
   });
 
   // While scrolling, follow the target instantly instead of easing behind it
-  window.addEventListener(
+  document.addEventListener(
     "scroll",
     () => {
       if (!target) return;
@@ -306,7 +307,7 @@ function initDetector() {
       clearTimeout(snapTimer);
       snapTimer = setTimeout(() => box.classList.remove("is-snapping"), 150);
     },
-    { passive: true },
+    { passive: true, capture: true },
   );
   window.addEventListener("resize", place);
 
@@ -328,7 +329,7 @@ function initDetector() {
       if (best) show(best.el);
       else hide();
     };
-    window.addEventListener(
+    document.addEventListener(
       "scroll",
       () => {
         if (!ticking) {
@@ -336,7 +337,7 @@ function initDetector() {
           requestAnimationFrame(scan);
         }
       },
-      { passive: true },
+      { passive: true, capture: true },
     );
   }
 }
@@ -705,7 +706,7 @@ window.copyEmail = async function () {
  */
 const ACHIEVEMENTS = [
   { id: "boot", icon: "▶", title: "Player 1 ready", desc: "Load the portfolio.", xp: 10 },
-  { id: "explorer", icon: "◆", title: "Explorer", desc: "Visit all five tabs.", xp: 40 },
+  { id: "explorer", icon: "◆", title: "Explorer", desc: "Visit all six tabs.", xp: 40 },
   { id: "case", icon: "▣", title: "Case opened", desc: "Open a project case study.", xp: 20 },
   { id: "debrief", icon: "▤", title: "Full debrief", desc: "Open all five case studies.", xp: 60 },
   { id: "blueprint", icon: "≡", title: "Read the blueprint", desc: "Scroll a case study to the very end.", xp: 25 },
@@ -713,9 +714,9 @@ const ACHIEVEMENTS = [
   { id: "shark", icon: "♠", title: "Card shark", desc: "Get the Pişti card to follow you around.", xp: 20 },
   { id: "shutter", icon: "◉", title: "Shutterbug", desc: "Open a photo.", xp: 15 },
   { id: "gallery", icon: "▦", title: "Gallery tour", desc: "See all three photos.", xp: 30 },
-  { id: "night", icon: "☾", title: "Night shift", desc: "Switch the theme. The overview changes too.", xp: 15 },
-  { id: "ahoy", icon: "⚓", title: "Ahoy!", desc: "Click the yacht on the horizon.", hint: "Something is sailing across the overview.", xp: 30, secret: true },
-  { id: "castle", icon: "♜", title: "Castel dell'Ovo", desc: "Click the castle. It's the one behind me in my photo, in Naples.", hint: "The overview has a landmark. Knock on it.", xp: 20, secret: true },
+  { id: "night", icon: "☾", title: "Night shift", desc: "Switch the theme. The pixel seafront changes too.", xp: 15 },
+  { id: "ahoy", icon: "⚓", title: "Ahoy!", desc: "Click the yacht on the horizon.", hint: "Something is sailing past the castle.", xp: 30, secret: true },
+  { id: "castle", icon: "♜", title: "Castel dell'Ovo", desc: "Click the castle. It's the one behind me in my photo, in Naples.", hint: "The seafront has a landmark. Knock on it.", xp: 20, secret: true },
   { id: "tuner", icon: "⇆", title: "Hyperparameter tuner", desc: "Move the confidence threshold in the Vision Lab.", xp: 15 },
   { id: "sharp", icon: "⊕", title: "Sharpshooter", desc: "Tag 10 objects in one Vision Lab round.", xp: 50 },
   { id: "away", icon: "↺", title: "Target reacquired", desc: "Leave the browser tab and come back.", hint: "The page notices when you look away.", xp: 10, secret: true },
@@ -736,7 +737,7 @@ const QUEST_KEY = "quest-v1";
 const quest = loadQuest();
 
 function freshQuest() {
-  return { done: {}, seen: { tab: [], project: [], photo: [] }, best: 0, sound: false };
+  return { done: {}, seen: { tab: [], project: [], photo: [] }, best: 0, sound: true };
 }
 
 function loadQuest() {
@@ -834,12 +835,13 @@ function renderQuest(bump) {
     grid.innerHTML = ACHIEVEMENTS.map((a) => {
       const got = !!quest.done[a.id];
       const hidden = a.secret && !got;
-      return `<li class="quest${got ? " is-done" : ""}">
+      const title = hidden ? "???" : a.title;
+      const desc = hidden ? a.hint : a.desc;
+      return `<li class="quest${got ? " is-done" : ""}" title="${title}: ${desc} (+${a.xp} XP${got ? ", unlocked" : ""})">
         <span class="quest-icon" aria-hidden="true">${hidden ? "?" : a.icon}</span>
         <div>
-          <p class="quest-title">${hidden ? "???" : a.title}</p>
-          <p class="quest-desc">${hidden ? a.hint : a.desc}</p>
-          <p class="quest-xp">${got ? "Unlocked · " : ""}+${a.xp} XP</p>
+          <p class="quest-title">${title}</p>
+          <p class="quest-desc"><span class="quest-xp">+${a.xp}</span> ${desc}</p>
         </div>
       </li>`;
     }).join("");
@@ -877,6 +879,8 @@ function blip(notes) {
   if (!quest.sound) return;
   try {
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    // Browsers start audio suspended until the first click or key press
+    if (audioCtx.state === "suspended") audioCtx.resume();
     notes.forEach((f, i) => {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
@@ -1056,7 +1060,7 @@ function initHeroScene() {
   const portrait = hero.querySelector(".portrait");
   const ctx = canvas.getContext("2d");
   const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const narrowMq = window.matchMedia("(max-width: 860px)");
+  const narrowMq = window.matchMedia("(max-width: 899px)");
 
   let W = 0, H = 0, P = 1;
   let L = null; // layout + prebuilt layers

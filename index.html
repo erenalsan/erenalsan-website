@@ -38,6 +38,7 @@
       <a href="#lab" class="tab" data-tab="lab"><span class="tab-num">03</span>Vision Lab &amp; Demos</a>
       <a href="#career" class="tab" data-tab="career"><span class="tab-num">04</span>Career &amp; Skills</a>
       <a href="#beyond" class="tab" data-tab="beyond"><span class="tab-num">05</span>Beyond Code</a>
+      <a href="#contact" class="tab" data-tab="contact"><span class="tab-num">06</span>Write to Me</a>
     </nav>
     <div class="nav-tools">
       <a href="#quest-log" id="xp-hud" class="xp-hud" data-detect="player stats" aria-label="Your level and XP. Open the quest log">
@@ -227,11 +228,11 @@
     </div>
 
     <!-- 03 VISION LAB & DEMOS -->
-    <div id="lab" class="view">
-      <section class="section">
+    <div id="lab" class="view view-split">
+      <section class="section lab-main">
         <div class="section-head" data-reveal>
           <h2 class="section-title">Vision Lab</h2>
-          <p class="section-intro">Toy versions of problems I work on for real. Drag the threshold and watch the model trade misses for false alarms, then try being the detector yourself.</p>
+          <p class="section-intro">Drag the threshold and watch the model trade misses for false alarms, then try being the detector yourself.</p>
         </div>
 
         <div class="lab-card" data-reveal>
@@ -255,22 +256,20 @@
       <section id="quest-log" class="section quest-section">
         <div class="section-head" data-reveal>
           <h2 class="section-title">Quest log</h2>
-          <p class="section-intro">Achievements unlock as you look around the site. Some are hidden. Progress is saved in this browser only.</p>
+          <p class="section-intro">Achievements unlock as you look around. Some are hidden. Saved in this browser only.</p>
         </div>
         <div class="quest-progress">
           <span id="quest-summary">0 / 0</span>
           <span class="xp-bar" aria-hidden="true"><span id="quest-fill" class="xp-fill"></span></span>
+          <button id="quest-sound" type="button" class="btn btn-quiet" aria-pressed="true">Sound: on</button>
+          <button id="quest-reset" type="button" class="btn btn-quiet">Reset</button>
         </div>
         <ul id="quest-grid" class="quest-grid"></ul>
-        <div class="quest-actions">
-          <button id="quest-sound" type="button" class="btn btn-quiet" aria-pressed="false">Sound: off</button>
-          <button id="quest-reset" type="button" class="btn btn-quiet">Reset progress</button>
-        </div>
       </section>
     </div>
 
     <!-- 04 CAREER & SKILLS -->
-    <div id="career" class="view">
+    <div id="career" class="view view-split">
       <section id="experience" class="section">
         <div class="section-head" data-reveal>
           <h2 class="section-title">Experience &amp; education</h2>
@@ -328,6 +327,7 @@
           <h2 class="section-title">Beyond the code</h2>
           <p class="section-intro">Thirteen years of ice hockey and a lot of time underwater shaped how I work under pressure. Photography is why I started building Minimalframe.</p>
         </div>
+        <div class="beyond-split">
         <div class="pursuits">
             <div class="pursuit" data-reveal data-detect="hockey player">
               <h3 class="pursuit-title">Ice hockey, 13 years</h3>
@@ -361,9 +361,13 @@
             <figcaption>Foça, Turkey</figcaption>
           </figure>
         </div>
+        </div>
       </section>
+    </div>
 
-      <section id="contact" class="contact on-blue">
+    <!-- 06 WRITE TO ME -->
+    <div id="contact" class="view">
+      <section class="contact on-blue">
         <h2 class="contact-title">Write to me</h2>
         <p class="contact-intro">Hiring for AI or ML engineering, starting a research collaboration, or building something that needs to see? Send me a line.</p>
         <a id="contact-email" class="contact-email" href="mailto:eren.alsan@outlook.com" data-detect="contact" data-conf="0.99">eren.alsan@outlook.com</a>
