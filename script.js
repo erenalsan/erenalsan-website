@@ -1026,7 +1026,6 @@ const SCENE_PALETTES = {
     sea: ["#132f7d", "#1a44a3", "#2457bf"],
     glint: "#cfe0ff",
     stone: ["#f0d9a4", "#d9b97e", "#b8955f", "#7d6440"],
-    wall: ["#6e655d", "#4f4741", "#8a8076"],
     rock: ["#ece6dc", "#c4bcaf", "#8f877b"],
     brick: ["#b9643f", "#8e4a2e", "#d98a5f"],
     window: "#3a2c1c",
@@ -1043,7 +1042,6 @@ const SCENE_PALETTES = {
     sea: ["#050a24", "#091236", "#0e1a48"],
     glint: "#9fb0ff",
     stone: ["#8a7a62", "#6c5d47", "#4e4232", "#2f271d"],
-    wall: ["#2c2a33", "#1d1b22", "#3b3844"],
     rock: ["#5e5b68", "#45424f", "#2c2a33"],
     brick: ["#5a3326", "#43251b", "#6e4030"],
     window: "#ffd23f",
@@ -1192,21 +1190,6 @@ function initHeroScene() {
       f.fillRect(x, y, w, h);
     };
 
-    // Breakwater running out to sea from the castle
-    px(cx + CW, hz - 1, W - cx - CW, 4, c.wall[0]);
-    px(cx + CW, hz - 1, W - cx - CW, 1, c.wall[2]);
-    for (let x = cx + CW + 3; x < W; x += 7) px(x, hz, 1, 3, c.wall[1]);
-
-    // Lower wing with its own battlements, to the right of the tower when there's room for it
-    const wingW = 18;
-    const wingH = Math.round(CH * 0.42);
-    const wx = W - (cx + CW) >= wingW + 2 ? cx + CW : null;
-    if (wx !== null) {
-      px(wx, by - wingH, wingW, wingH, c.stone[2]);
-      for (let x = wx; x < wx + wingW; x += 4) px(x, by - wingH - 2, 2, 2, c.stone[2]);
-      px(wx + 7, by - wingH + 5, 2, 3, c.window);
-    }
-
     // Main tower: sunlit left face, shaded right face, flared base, stone texture
     for (let y = ty; y < by; y++) {
       const flare = Math.max(0, Math.floor((y - (by - 12)) / 3));
@@ -1264,10 +1247,18 @@ function initHeroScene() {
     }
 
     // Street lamp in front of the castle
+    // Stands on red bricks: the foreground ledge on desktop, its own little brick base on phones
+    // (where the ledge is far below, under the text)
     const lx = narrow ? cx + CW + 5 : cx - 4;
+    const lampBase = narrow ? rockY : y0;
+    if (narrow) {
+      px(lx - 4, lampBase, 9, 3, c.brick[0]);
+      px(lx - 4, lampBase, 9, 1, c.brick[2]);
+      px(lx, lampBase + 1, 1, 2, c.brick[1]);
+    }
     const lampTop = ty + Math.round(CH * 0.35);
-    px(lx, lampTop, 1, rockY - lampTop, c.lamp);
-    px(lx - 1, rockY - 2, 3, 2, c.lamp);
+    px(lx, lampTop, 1, lampBase - lampTop, c.lamp);
+    px(lx - 1, lampBase - 2, 3, 2, c.lamp);
     px(lx - 1, lampTop - 5, 3, 1, c.lamp);
     px(lx - 1, lampTop - 4, 3, 4, c.lamp);
     px(lx, lampTop - 3, 1, 2, c.lampLight);
@@ -1308,7 +1299,7 @@ function initHeroScene() {
       ? []
       : [0, 1, 2].map((i) => ({ x: rand() * W, y: Math.round(hz * (0.2 + rand() * 0.35)), v: 0.3 + rand() * 0.25, p: i * 3 }));
 
-    L = { c, night, hz, cx, CW, ty, by, wx, wingW, brickH, orbX, back, front, clouds, stars, gulls };
+    L = { c, night, hz, cx, CW, ty, by, brickH, orbX, back, front, clouds, stars, gulls };
     if (!boatX) boatX = Math.round(W * 0.15);
   }
 
@@ -1387,8 +1378,7 @@ function initHeroScene() {
     const x = (e.clientX - r.left) / P;
     const y = (e.clientY - r.top) / P;
     if (x >= boatX - 2 && x <= boatX + 16 && y >= L.hz - 7 && y <= L.hz + 3) return "ahoy";
-    const right = L.wx === null ? L.cx + L.CW : L.wx + L.wingW;
-    if (x >= L.cx && x <= right && y >= L.ty - 3 && y <= L.by) return "castle";
+    if (x >= L.cx && x <= L.cx + L.CW && y >= L.ty - 3 && y <= L.by) return "castle";
     return null;
   }
   hero.addEventListener("click", (e) => {
