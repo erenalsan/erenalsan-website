@@ -274,6 +274,8 @@ function initDetector() {
     box.style.transform = `translate(${r.left - PAD}px, ${r.top - PAD}px)`;
     box.style.width = `${r.width + PAD * 2}px`;
     box.style.height = `${r.height + PAD * 2}px`;
+    // No room for the label above (e.g. the name in the header): hang it below the box instead
+    box.classList.toggle("label-below", r.top - PAD - label.offsetHeight < 0);
   }
 
   function show(el) {
@@ -297,6 +299,7 @@ function initDetector() {
   });
   document.documentElement.addEventListener("pointerleave", hide);
   document.addEventListener("viewchange", hide);
+  document.addEventListener("overlayopen", hide);
   document.addEventListener("focusin", (e) => {
     const el = e.target.closest("[data-detect]");
     if (el) show(el);
@@ -322,6 +325,8 @@ function initDetector() {
     let ticking = false;
     const scan = () => {
       ticking = false;
+      // A popup scrolling underneath shouldn't make the detector lock onto the page behind it
+      if (document.querySelector(".overlay.is-open")) return hide();
       const y = window.innerHeight / 2;
       let best = null;
       document.querySelectorAll("[data-detect]").forEach((el) => {
@@ -378,6 +383,7 @@ function showOverlay(el) {
   el.classList.remove("hidden");
   void el.offsetWidth;
   el.classList.add("is-open");
+  document.dispatchEvent(new CustomEvent("overlayopen"));
 }
 
 function hideOverlay(el) {
@@ -1270,7 +1276,7 @@ function initHeroScene() {
       ? []
       : [0, 1, 2].map((i) => ({ x: rand() * W, y: Math.round(hz * (0.2 + rand() * 0.35)), v: 0.3 + rand() * 0.25, p: i * 3 }));
 
-    L = { c, night, hz, cx, CW, ty, by, wx, wingW, brickH, orbX, back, front, clouds, stars, gulls };
+    L = { c, night, narrow, hz, cx, CW, ty, by, wx, wingW, brickH, orbX, back, front, clouds, stars, gulls };
     if (!boatX) boatX = Math.round(W * 0.15);
   }
 
@@ -1292,14 +1298,18 @@ function initHeroScene() {
     });
 
     // Moving glints on the water, denser in the sun/moon path
+    // Kept faint and sparse: bright flicker on the water is tiring to look at
     ctx.fillStyle = c.glint;
+    ctx.globalAlpha = 0.5;
     const seaEnd = H - L.brickH;
+    const gw = L.narrow ? 1 : 2;
     for (let y = hz + 2; y < seaEnd; y += 2) {
       for (let x = (y * 7) % 9; x < W; x += 9) {
-        const near = Math.abs(x - L.orbX) < 4 + (y - hz) / 3;
-        if ((x * 7 + y * 13 + frame) % (near ? 5 : 43) === 0) ctx.fillRect(x, y, 2, 1);
+        const near = Math.abs(x - L.orbX) < 3 + (y - hz) / 6;
+        if ((x * 7 + y * 13 + frame) % (near ? 13 : 61) === 0) ctx.fillRect(x, y, gw, 1);
       }
     }
+    ctx.globalAlpha = 1;
 
     // Yacht on the horizon, sliding behind the castle
     const bxr = Math.round(boatX);

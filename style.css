@@ -92,7 +92,7 @@ button { font: inherit; color: inherit; }
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 60;
+  z-index: 45; /* above the header, below popups */
   width: 0;
   height: 0;
   border: 2px solid var(--box);
@@ -117,6 +117,7 @@ button { font: inherit; color: inherit; }
 }
 .detector.on-blue { border-color: var(--signal); }
 .detector.on-blue .detector-label { background: var(--signal); color: #14213d; }
+.detector.label-below .detector-label { bottom: auto; top: 100%; }
 
 /* --- Nav: sticky header with tab triggers --- */
 .nav {
@@ -147,11 +148,13 @@ button { font: inherit; color: inherit; }
   flex: 1;
   min-width: 0;
   align-self: stretch;
-  justify-content: center;
   overflow-x: auto;
   scrollbar-width: none;
 }
 .tabs::-webkit-scrollbar { display: none; }
+/* Centred with auto margins rather than justify-content, so overflow scrolls instead of spilling left over the name */
+.tab:first-child { margin-left: auto; }
+.tab:last-child { margin-right: auto; }
 .tab {
   flex: none;
   display: inline-flex;
@@ -706,8 +709,8 @@ html.js .path:not(.is-visible)::before { transform: scaleY(0); }
   justify-content: center;
   min-height: calc(100svh - var(--header-h));
   padding: var(--vpad) var(--gutter);
-  background: var(--hero);
-  color: var(--on-hero);
+  background: var(--bg);
+  color: var(--ink);
 }
 .contact-title {
   font-size: clamp(2.75rem, 7.5vw, 6.5rem);
@@ -720,6 +723,7 @@ html.js .path:not(.is-visible)::before { transform: scaleY(0); }
   max-width: 34em;
   font-size: 1rem;
   margin-bottom: 1.75rem;
+  color: var(--muted);
 }
 .contact-email {
   align-self: flex-start;
@@ -732,7 +736,13 @@ html.js .path:not(.is-visible)::before { transform: scaleY(0); }
   text-underline-offset: 0.5rem;
   margin-bottom: 1.75rem;
 }
-.contact-email:hover { color: var(--signal); }
+.contact-email { color: var(--accent); }
+.contact-email:hover { color: var(--ink); }
+/* Same page colours as the other tabs, so the buttons switch to their on-page variants */
+.contact .btn-light { background: var(--accent); color: #fff; }
+.contact .btn-light:hover { background: var(--signal); color: #14213d; }
+.contact .btn-ghost { color: var(--ink); }
+.contact .btn-ghost:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
 .contact-actions {
   display: flex;
   flex-wrap: wrap;
@@ -748,7 +758,7 @@ html.js .path:not(.is-visible)::before { transform: scaleY(0); }
   border: 1.5px solid currentColor;
   border-radius: 999px;
 }
-.icon-link:hover { background: rgba(255, 255, 255, 0.12); }
+.icon-link:hover { color: var(--accent); }
 .icon-link svg { width: 1rem; height: 1rem; }
 
 /* --- Footer --- */
@@ -1223,17 +1233,17 @@ html.js .cv-lock::after  { animation: ctaTag 4s var(--ease-out) 2.4s both; }
 }
 
 /* --- Responsive --- */
-@media (max-width: 1180px) {
+@media (max-width: 1320px) {
   :root { --header-h: 6.25rem; }
   .nav { padding-top: 0.5rem; }
   .nav-brand { margin-right: auto; }
   .tabs {
     order: 3;
     flex-basis: 100%;
-    justify-content: flex-start;
     margin-top: 0.5rem;
     border-top: 1px solid var(--line);
   }
+  .tab:first-child, .tab:last-child { margin: 0; }
   .tab { padding: 0.625rem 0.5rem; }
 }
 @media (max-width: 899px) {
@@ -1290,4 +1300,5 @@ html.js .cv-lock::after  { animation: ctaTag 4s var(--ease-out) 2.4s both; }
 /* Dark accent is light periwinkle, so filled accent buttons need dark text */
 :root[data-theme="dark"] .nav-cv,
 :root[data-theme="dark"] .btn-accent,
+:root[data-theme="dark"] .contact .btn-light,
 :root[data-theme="dark"] .modal-actions .btn-light { color: #14213d; }
