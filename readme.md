@@ -13,20 +13,21 @@ Built with an emphasis on **zero-framework bloat**, **local-first architectures*
 
 Designed to strictly eliminate "AI Slop" visual tropes (oversaturated neon gradients, heavy glassmorphism, or generic dark modes) in favor of custom-curated, warm, and sophisticated color schemes.
 
-### ☀️ Light Theme: *Golden Summer Fields*
-- **Background (`Cornsilk`):** `#fefae0`
-- **Cards / Containers (`Papaya Whip`):** `#faedcd`
-- **Borders (`Beige`):** `#e9edc9`
-- **Primary Accent (`Light Bronze`):** `#d4a373`
-- **Subtle Accent (`Dry Sage`):** `#ccd5ae`
-- **Typography:** `#2b2b2b` (Slate Charcoal)
+### ☀️ Light Theme: *Nordic Slate & Warm Paper*
+- **Background (`Warm Paper`):** `#f4f4f0`
+- **Cards / Containers:** `#ffffff`
+- **Borders (`Slate`):** `#e2e8f0`
+- **Tech Badges:** `#f1f5f9`
+- **Primary Accent (`Warm Amber`):** `#d97706`
+- **Typography:** `#0f172a` / muted `#64748b`
 
-### 🌙 Dark Theme: *Space Indigo & Lilac Ash* (Default)
-- **Background (`Space Indigo`):** `#22223b`
-- **Cards / Containers (`Dusty Grape`):** `#4a4e69`
-- **Borders (`Lilac Ash`):** `#9a8c98`
-- **Primary Accent (`Almond Silk`):** `#c9ada7`
-- **Typography (`Seashell`):** `#f2e9e4`
+### 🌙 Dark Theme: *Deep Space Slate* (Default)
+- **Background (`Obsidian`):** `#0b0f17`
+- **Cards / Containers (`Slate Navy`):** `#161e2e`
+- **Borders (`Steel`):** `#283548`
+- **Tech Badges:** `#1e293b`
+- **Primary Accent (`Sky Blue`):** `#38bdf8`
+- **Typography:** `#f8fafc` / muted `#94a3b8`
 
 ---
 
@@ -36,7 +37,7 @@ Designed to strictly eliminate "AI Slop" visual tropes (oversaturated neon gradi
 - **🛸 Top-Down Drone LERP Follower:** A smooth, interactive top-down drone cursor-tracking effect (using LERP animation) embedded within the GÖKBAĞ Autonomous Drone project card.
 - **🖼️ Minimalframe Spotlight:** Showcases the local-first, GPU proxy-rendering photo processing engine built using Svelte, Canvas API, and Capacitor.
 - **🪟 Interactive Modal & Lightbox System:** Uniform project cards opening detailed technical architecture modals, paired with a compact, keyboard-navigable photography slideshow in the Beyond Code section.
-- **🌗 Theme Toggle with State Persistence:** Seamless switcher between *Golden Summer Fields* and *Space Indigo* persisted via `localStorage`.
+- **🌗 Theme Toggle with State Persistence:** Seamless switcher between *Nordic Slate & Warm Paper* and *Deep Space Slate* persisted via `localStorage`.
 
 ---
 
@@ -49,7 +50,7 @@ erenalsan/
 ├── script.js              # Theme switcher, LERP physics, modals & overlays
 ├── README.md               # Documentation
 └── assets/
-    ├── pp.jpeg             # Profile picture
+    ├── pp.JPG              # Profile picture
     ├── Eren_Alsan_CV.pdf   # Direct download CV document
     ├── projects/           # Screenshots & diagrams for project modals
     └── photography/        # High-res photography gallery shots

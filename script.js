@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * EREN ALSAN PORTFOLIO — SCRIPT.JS
@@ -7,85 +7,97 @@
 
 // Project Metadata Store for Full Interactive Modals
 const PROJECTS_DATA = {
-  'minimalframe': {
-    title: 'Minimalframe',
-    subtitle: 'Local-First Photo Processing & Formatting Engine',
-    category: 'Cross-Platform PWA & Native Android',
-    status: 'In Progress / Active Development',
-    github: 'https://github.com/rnlsn326/minimalframe',
-    image: 'assets/projects/minimalframe.jpg',
-    stack: ['Svelte', 'Vite', 'Capacitor', 'HTML5 Canvas API', 'JSZip', 'JavaScript (ES6+)'],
-    overview: 'Engineered a 100% local (offline-first), privacy-centric cross-platform photo editing and framing engine built for professional photographers with zero server dependencies.',
+  minimalframe: {
+    title: "Minimalframe",
+    subtitle: "Local-First Photo Processing & Formatting Engine",
+    category: "Cross-Platform PWA & Native Android",
+    status: "In Progress / Active Development",
+    github: "https://github.com/rnlsn326/minimalframe",
+    image: "assets/projects/minimalframe.jpg",
+    stack: [
+      "Svelte",
+      "Vite",
+      "Capacitor",
+      "HTML5 Canvas API",
+      "JSZip",
+      "JavaScript (ES6+)",
+    ],
+    overview:
+      "Engineered a 100% local (offline-first), privacy-centric cross-platform photo editing and framing engine built for professional photographers with zero server dependencies.",
     architecture: [
-      'Implemented a proxy-rendering architecture to eliminate mobile/low-end device bottlenecks, processing 24MP+ RAW/JPEG previews with GPU hardware acceleration to maintain a smooth 60fps UI experience.',
-      'Developed a custom HTML5 Canvas rendering engine featuring dynamic aspect ratio calculations, automatic EXIF metadata parsing (camera model, focal length, aperture, shutter speed), typographic overlays, and custom watermark integration.',
-      'Built an in-memory batch export pipeline using JSZip for one-click multi-image processing alongside a persistent preset system backed by localStorage.',
-      'Packaged the zero-bloat web codebase into an optimized native Android application (.apk) using Capacitor.'
-    ]
+      "Implemented a proxy-rendering architecture to eliminate mobile/low-end device bottlenecks, processing 24MP+ RAW/JPEG previews with GPU hardware acceleration to maintain a smooth 60fps UI experience.",
+      "Developed a custom HTML5 Canvas rendering engine featuring dynamic aspect ratio calculations, automatic EXIF metadata parsing (camera model, focal length, aperture, shutter speed), typographic overlays, and custom watermark integration.",
+      "Built an in-memory batch export pipeline using JSZip for one-click multi-image processing alongside a persistent preset system backed by localStorage.",
+      "Packaged the zero-bloat web codebase into an optimized native Android application (.apk) using Capacitor.",
+    ],
   },
-  'gokbag': {
-    title: 'Autonomous Military Support Drone (GÖKBAĞ)',
-    subtitle: 'Tactical Reconnaissance & Autonomous Target Acquisition',
-    category: 'Autonomous Systems & Computer Vision',
-    status: 'Active Defense R&D',
+  gokbag: {
+    title: "Autonomous Military Support Drone (GÖKBAĞ)",
+    subtitle: "Tactical Reconnaissance & Autonomous Target Acquisition",
+    category: "Autonomous Systems & Computer Vision",
+    status: "Active Defense R&D",
     github: null,
-    image: 'assets/projects/gokbag.jpg',
-    stack: ['Python', 'YOLO', 'OpenCV', 'Embedded Systems'],
-    overview: 'AI-powered tactical drone system designed for aerial reconnaissance, autonomous search-and-rescue navigation, and real-time object tracking.',
+    image: "assets/projects/gokbag.jpg",
+    stack: ["Python", "YOLO", "OpenCV", "Embedded Systems"],
+    overview:
+      "AI-powered tactical drone system designed for aerial reconnaissance, autonomous search-and-rescue navigation, and real-time object tracking.",
     architecture: [
-      'Trained and optimized custom YOLO models for aerial friend-or-foe classification under varying light and thermal conditions.',
-      'Integrated OpenCV video pipelines for real-time edge bounding box prediction with sub-50ms inference latency.',
-      'Built robust fail-safe autonomous return-to-home procedures and GPS-waypoint tracking algorithms.'
-    ]
+      "Trained and optimized custom YOLO models for aerial friend-or-foe classification under varying light and thermal conditions.",
+      "Integrated OpenCV video pipelines for real-time edge bounding box prediction with sub-50ms inference latency.",
+      "Built robust fail-safe autonomous return-to-home procedures and GPS-waypoint tracking algorithms.",
+    ],
   },
-  'credit-ml': {
-    title: 'Credit Eligibility ML Model',
-    subtitle: 'Predictive Banking Risk Assessment Classifier',
-    category: 'FinTech & Predictive Modeling',
-    status: 'Completed Research Model',
+  "credit-ml": {
+    title: "Credit Eligibility ML Model",
+    subtitle: "Predictive Banking Risk Assessment Classifier",
+    category: "FinTech & Predictive Modeling",
+    status: "Completed Research Model",
     github: null,
-    image: 'assets/projects/credit-ml.jpg',
-    stack: ['Python', 'Scikit-Learn', 'Pandas', 'NumPy', 'Data Analysis'],
-    overview: 'End-to-end machine learning pipeline built to assess creditworthiness and predict loan default risk on imbalanced financial datasets.',
+    image: "assets/projects/credit-ml.jpg",
+    stack: ["Python", "Scikit-Learn", "Pandas", "NumPy", "Data Analysis"],
+    overview:
+      "End-to-end machine learning pipeline built to assess creditworthiness and predict loan default risk on imbalanced financial datasets.",
     architecture: [
-      'Conducted extensive exploratory data analysis and feature engineering on high-dimensional demographic and financial history data.',
-      'Trained ensemble classifiers (Random Forest, Gradient Boosting) utilizing SMOTE and cross-validation to maximize precision and recall on high-risk borrowers.',
-      'Documented model explainability metrics using SHAP values for regulatory transparency.'
-    ]
+      "Conducted extensive exploratory data analysis and feature engineering on high-dimensional demographic and financial history data.",
+      "Trained ensemble classifiers (Random Forest, Gradient Boosting) utilizing SMOTE and cross-validation to maximize precision and recall on high-risk borrowers.",
+      "Documented model explainability metrics using SHAP values for regulatory transparency.",
+    ],
   },
-  'enterprise-apex': {
-    title: 'Universal Polymer & Vita Global Services',
-    subtitle: 'Production B2B Enterprise ERP Architecture',
-    category: 'Enterprise Full-Stack Systems',
-    status: 'Live Production',
+  "enterprise-apex": {
+    title: "Universal Polymer & Vita Global Services",
+    subtitle: "Production B2B Enterprise ERP Architecture",
+    category: "Enterprise Full-Stack Systems",
+    status: "Live Production",
     github: null,
-    image: 'assets/projects/enterprise-apex.jpg',
-    stack: ['Oracle APEX', 'JavaScript', 'REST API', 'Oracle SQL', 'PL/SQL'],
-    overview: 'Comprehensive enterprise web applications supporting two international commercial operations with automated workflow pipelines.',
+    image: "assets/projects/enterprise-apex.jpg",
+    stack: ["Oracle APEX", "JavaScript", "REST API", "Oracle SQL", "PL/SQL"],
+    overview:
+      "Comprehensive enterprise web applications supporting two international commercial operations with automated workflow pipelines.",
     architecture: [
-      'Designed normalized relational schemas and high-throughput PL/SQL stored procedures for inventory movements and dynamic invoice generation.',
-      'Built bi-directional REST integrations with WhatsApp API and email webhooks for instantaneous automated order notifications.',
-      'Implemented real-time sales margin calculators to support dynamic pricing negotiations in live multi-currency B2B deals.'
-    ]
+      "Designed normalized relational schemas and high-throughput PL/SQL stored procedures for inventory movements and dynamic invoice generation.",
+      "Built bi-directional REST integrations with WhatsApp API and email webhooks for instantaneous automated order notifications.",
+      "Implemented real-time sales margin calculators to support dynamic pricing negotiations in live multi-currency B2B deals.",
+    ],
   },
-  'unity-pisti': {
-    title: 'Unity Pişti Game & .NET 7 API',
-    subtitle: 'Real-time Multiplayer Turkish Card Engine',
-    category: 'Game Engineering & Distributed Backend',
-    status: 'Production Graduation Capstone',
+  "unity-pisti": {
+    title: "Unity Pişti Game & .NET 7 API",
+    subtitle: "Real-time Multiplayer Turkish Card Engine",
+    category: "Game Engineering & Distributed Backend",
+    status: "Production Graduation Capstone",
     github: null,
-    image: 'assets/projects/unity-pisti.jpg',
-    stack: ['Unity C#', '.NET 7 REST API', 'PostgreSQL', 'WebSockets'],
-    overview: 'Multiplayer adaptation of the traditional Turkish card game (Pişti) pairing an interactive Unity client with a high-concurrency .NET 7 backend.',
+    image: "assets/projects/unity-pisti.jpg",
+    stack: ["Unity C#", ".NET 7 REST API", "PostgreSQL", "WebSockets"],
+    overview:
+      "Multiplayer adaptation of the traditional Turkish card game (Pişti) pairing an interactive Unity client with a high-concurrency .NET 7 backend.",
     architecture: [
-      'Engineered server-side authoritative card game logic in .NET 7 to prevent client-side desyncs and cheating.',
-      'Built authenticated player profiles, matchmaking queues, and persistent leaderboards backed by PostgreSQL.',
-      'Integrated smooth particle animations and responsive UI components in Unity C#.'
-    ]
-  }
+      "Engineered server-side authoritative card game logic in .NET 7 to prevent client-side desyncs and cheating.",
+      "Built authenticated player profiles, matchmaking queues, and persistent leaderboards backed by PostgreSQL.",
+      "Integrated smooth particle animations and responsive UI components in Unity C#.",
+    ],
+  },
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   if (window.lucide) {
     lucide.createIcons();
   }
@@ -102,49 +114,57 @@ document.addEventListener('DOMContentLoaded', () => {
  * 1. THEME SWITCHER (Dark / Light with LocalStorage Persistence)
  */
 function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  document.body.setAttribute('data-theme', theme);
+  document.documentElement.setAttribute("data-theme", theme);
+  document.body.setAttribute("data-theme", theme);
 
-  if (theme === 'light') {
-    document.documentElement.classList.remove('dark');
-    document.documentElement.classList.add('light');
-    document.body.classList.remove('dark');
-    document.body.classList.add('light');
+  if (theme === "light") {
+    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.add("light");
+    document.body.classList.remove("dark");
+    document.body.classList.add("light");
   } else {
-    document.documentElement.classList.add('dark');
-    document.documentElement.classList.remove('light');
-    document.body.classList.add('dark');
-    document.body.classList.remove('light');
+    document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("light");
+    document.body.classList.add("dark");
+    document.body.classList.remove("light");
   }
 
-  localStorage.setItem('theme', theme);
+  localStorage.setItem("theme", theme);
 
   // Sync icon display
-  const sunIcons = document.querySelectorAll('.theme-sun-icon');
-  const moonIcons = document.querySelectorAll('.theme-moon-icon');
-  if (theme === 'light') {
-    sunIcons.forEach(i => i.style.setProperty('display', 'none', 'important'));
-    moonIcons.forEach(i => i.style.setProperty('display', 'block', 'important'));
+  const sunIcons = document.querySelectorAll(".theme-sun-icon");
+  const moonIcons = document.querySelectorAll(".theme-moon-icon");
+  if (theme === "light") {
+    sunIcons.forEach((i) =>
+      i.style.setProperty("display", "none", "important"),
+    );
+    moonIcons.forEach((i) =>
+      i.style.setProperty("display", "block", "important"),
+    );
   } else {
-    sunIcons.forEach(i => i.style.setProperty('display', 'block', 'important'));
-    moonIcons.forEach(i => i.style.setProperty('display', 'none', 'important'));
+    sunIcons.forEach((i) =>
+      i.style.setProperty("display", "block", "important"),
+    );
+    moonIcons.forEach((i) =>
+      i.style.setProperty("display", "none", "important"),
+    );
   }
 }
 
 function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme') || 'dark';
-  const next = current === 'dark' ? 'light' : 'dark';
+  const current = document.documentElement.getAttribute("data-theme") || "dark";
+  const next = current === "dark" ? "light" : "dark";
   applyTheme(next);
 }
 
 function initThemeSwitch() {
-  const desktopBtn = document.getElementById('theme-toggle');
-  const mobileBtn = document.getElementById('mobile-theme-toggle');
+  const desktopBtn = document.getElementById("theme-toggle");
+  const mobileBtn = document.getElementById("mobile-theme-toggle");
 
-  if (desktopBtn) desktopBtn.addEventListener('click', toggleTheme);
-  if (mobileBtn) mobileBtn.addEventListener('click', toggleTheme);
+  if (desktopBtn) desktopBtn.addEventListener("click", toggleTheme);
+  if (mobileBtn) mobileBtn.addEventListener("click", toggleTheme);
 
-  const initial = document.documentElement.getAttribute('data-theme') || 'dark';
+  const initial = document.documentElement.getAttribute("data-theme") || "dark";
   applyTheme(initial);
 }
 
@@ -152,19 +172,19 @@ function initThemeSwitch() {
  * 2. MOBILE NAVIGATION DRAWER
  */
 function initMobileNav() {
-  const btn = document.getElementById('mobile-menu-btn');
-  const menu = document.getElementById('mobile-nav');
-  const links = document.querySelectorAll('.mobile-nav-link');
+  const btn = document.getElementById("mobile-menu-btn");
+  const menu = document.getElementById("mobile-nav");
+  const links = document.querySelectorAll(".mobile-nav-link");
 
   if (!btn || !menu) return;
 
-  btn.addEventListener('click', () => {
-    menu.classList.toggle('hidden');
+  btn.addEventListener("click", () => {
+    menu.classList.toggle("hidden");
   });
 
-  links.forEach(link => {
-    link.addEventListener('click', () => {
-      menu.classList.add('hidden');
+  links.forEach((link) => {
+    link.addEventListener("click", () => {
+      menu.classList.add("hidden");
     });
   });
 }
@@ -173,10 +193,10 @@ function initMobileNav() {
  * 3. INTERACTIVE PROJECT MODAL OVERLAY
  */
 function initProjectModals() {
-  const modal = document.getElementById('project-modal');
-  const modalContent = document.getElementById('modal-content');
-  const closeBtn = document.getElementById('modal-close-btn');
-  const backdrop = modal ? modal.querySelector('.modal-backdrop') : null;
+  const modal = document.getElementById("project-modal");
+  const modalContent = document.getElementById("modal-content");
+  const closeBtn = document.getElementById("modal-close-btn");
+  const backdrop = modal ? modal.querySelector(".modal-backdrop") : null;
 
   if (!modal || !modalContent) return;
 
@@ -184,7 +204,7 @@ function initProjectModals() {
     const data = PROJECTS_DATA[projectId];
     if (!data) return;
 
-    let githubBtnHtml = '';
+    let githubBtnHtml = "";
     if (data.github) {
       githubBtnHtml = `
         <a href="${data.github}" target="_blank" rel="noopener noreferrer" class="btn-solid inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-mono font-medium rounded transition-all">
@@ -195,13 +215,19 @@ function initProjectModals() {
       `;
     }
 
-    const techTagsHtml = data.stack.map(s => `<span class="tag-pill">${s}</span>`).join(' ');
-    const bulletsHtml = data.architecture.map(b => `
+    const techTagsHtml = data.stack
+      .map((s) => `<span class="tag-pill">${s}</span>`)
+      .join(" ");
+    const bulletsHtml = data.architecture
+      .map(
+        (b) => `
       <li class="flex items-start gap-2 text-xs text-muted leading-relaxed">
         <span class="text-accent mt-0.5 font-mono">&gt;</span>
         <span class="text-main">${b}</span>
       </li>
-    `).join('');
+    `,
+      )
+      .join("");
 
     modalContent.innerHTML = `
       <div>
@@ -250,35 +276,35 @@ function initProjectModals() {
       </div>
     `;
 
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
 
     if (window.lucide) lucide.createIcons();
   }
 
-  window.closeProjectModal = function() {
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
+  window.closeProjectModal = function () {
+    modal.classList.add("hidden");
+    document.body.style.overflow = "";
   };
 
-  document.querySelectorAll('.project-card[data-project]').forEach(card => {
-    card.addEventListener('click', () => {
-      const pId = card.getAttribute('data-project');
+  document.querySelectorAll(".project-card[data-project]").forEach((card) => {
+    card.addEventListener("click", () => {
+      const pId = card.getAttribute("data-project");
       openModal(pId);
     });
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        openModal(card.getAttribute('data-project'));
+        openModal(card.getAttribute("data-project"));
       }
     });
   });
 
-  if (closeBtn) closeBtn.addEventListener('click', window.closeProjectModal);
-  if (backdrop) backdrop.addEventListener('click', window.closeProjectModal);
+  if (closeBtn) closeBtn.addEventListener("click", window.closeProjectModal);
+  if (backdrop) backdrop.addEventListener("click", window.closeProjectModal);
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.classList.contains("hidden")) {
       window.closeProjectModal();
     }
   });
@@ -288,38 +314,50 @@ function initProjectModals() {
  * 4. PHOTOGRAPHY LIGHTBOX
  */
 function initPhotoLightbox() {
-  const lightbox = document.getElementById('lightbox-modal');
-  const lightboxImg = document.getElementById('lightbox-img');
-  const lightboxCaption = document.getElementById('lightbox-caption');
-  const lightboxFallback = document.getElementById('lightbox-fallback');
-  const lightboxCounter = document.getElementById('lightbox-counter');
-  const closeBtn = document.getElementById('lightbox-close-btn');
-  const prevBtn = document.getElementById('lightbox-prev-btn');
-  const nextBtn = document.getElementById('lightbox-next-btn');
-  const openVisualsBtn = document.getElementById('open-visuals-btn');
-  const backdrop = lightbox ? lightbox.querySelector('.lightbox-backdrop') : null;
+  const lightbox = document.getElementById("lightbox-modal");
+  const lightboxImg = document.getElementById("lightbox-img");
+  const lightboxCaption = document.getElementById("lightbox-caption");
+  const lightboxFallback = document.getElementById("lightbox-fallback");
+  const lightboxCounter = document.getElementById("lightbox-counter");
+  const closeBtn = document.getElementById("lightbox-close-btn");
+  const prevBtn = document.getElementById("lightbox-prev-btn");
+  const nextBtn = document.getElementById("lightbox-next-btn");
+  const openVisualsBtn = document.getElementById("open-visuals-btn");
+  const backdrop = lightbox
+    ? lightbox.querySelector(".lightbox-backdrop")
+    : null;
   const slides = [
     {
-      src: 'assets/photography/photo1.jpg',
-      alt: 'Architectural study in Passau',
-      caption: 'Architectural Perspectives • Passau, Germany',
-      fallback: 'Bavaria Architectural Study\nPassau • Germany\nISO 100 • 35mm • f/2.8'
+      src: "assets/photography/photo1.jpg",
+      alt: "Santuario della Beata Vergine del Rosario di Pompei framed by foliage",
+      caption: "Architectural Perspectives • Pompei, Italy",
+      fallback:
+        "Italian Architectural Study\nPompei • Italy\nISO 100 • 50mm • f/4.0",
     },
     {
-      src: 'assets/photography/photo2.jpg',
-      alt: 'Mediterranean coastline',
-      caption: 'Mediterranean Coastlines • Aegean Water Solitude',
-      fallback: 'Aegean Marine Landscapes\nCoastlines • Freediving Grounds\nISO 200 • 50mm • f/1.8'
+      src: "assets/photography/photo2.jpg",
+      alt: "Vintage car driving through historic street in Passau",
+      caption: "Bavarian Street Dynamics • Passau, Germany",
+      fallback:
+        "Bavaria Architectural Study\nPassau • Germany\nISO 200 • 35mm • f/2.8",
     },
     {
-      src: 'assets/photography/photo3.jpg',
-      alt: 'Urban geometry',
-      caption: 'Urban Geometry & Textures in the wild',
-      fallback: 'Urban Silhouettes & Textures\nLight & Geometry Contrast\nISO 400 • 24mm • f/4.0'
-    }
+      src: "assets/photography/photo3.jpg",
+      alt: "Black cat sitting on a carpeted fishing boat at Foça harbor",
+      caption: "Aegean Marine Solitude • Foça, Turkey",
+      fallback:
+        "Aegean Marine Landscapes\nFoça Harbor • Turkey\nISO 400 • 24mm • f/2.0",
+    },
   ];
 
-  if (!lightbox || !lightboxImg || !lightboxCaption || !lightboxFallback || !slides.length) return;
+  if (
+    !lightbox ||
+    !lightboxImg ||
+    !lightboxCaption ||
+    !lightboxFallback ||
+    !slides.length
+  )
+    return;
 
   let currentIndex = 0;
   let previousFocus = null;
@@ -328,9 +366,9 @@ function initPhotoLightbox() {
     currentIndex = (index + slides.length) % slides.length;
     const slide = slides[currentIndex];
 
-    lightboxImg.classList.add('hidden');
-    lightboxFallback.classList.add('hidden');
-    lightboxImg.removeAttribute('src');
+    lightboxImg.classList.add("hidden");
+    lightboxFallback.classList.add("hidden");
+    lightboxImg.removeAttribute("src");
     lightboxImg.alt = slide.alt;
     lightboxFallback.textContent = slide.fallback;
     lightboxCaption.textContent = slide.caption;
@@ -341,13 +379,13 @@ function initPhotoLightbox() {
     const slideIndex = currentIndex;
     lightboxImg.onerror = () => {
       if (currentIndex !== slideIndex) return;
-      lightboxImg.classList.add('hidden');
-      lightboxFallback.classList.remove('hidden');
+      lightboxImg.classList.add("hidden");
+      lightboxFallback.classList.remove("hidden");
     };
     lightboxImg.onload = () => {
       if (currentIndex !== slideIndex) return;
-      lightboxFallback.classList.add('hidden');
-      lightboxImg.classList.remove('hidden');
+      lightboxFallback.classList.add("hidden");
+      lightboxImg.classList.remove("hidden");
     };
     lightboxImg.src = slide.src;
   }
@@ -355,16 +393,17 @@ function initPhotoLightbox() {
   function openLightbox(index) {
     previousFocus = document.activeElement;
     showSlide(index);
-    lightbox.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    lightbox.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
     if (closeBtn) closeBtn.focus();
   }
 
   function closeLightbox() {
-    lightbox.classList.add('hidden');
-    lightboxImg.removeAttribute('src');
-    document.body.style.overflow = '';
-    if (previousFocus && typeof previousFocus.focus === 'function') previousFocus.focus();
+    lightbox.classList.add("hidden");
+    lightboxImg.removeAttribute("src");
+    document.body.style.overflow = "";
+    if (previousFocus && typeof previousFocus.focus === "function")
+      previousFocus.focus();
   }
 
   function showPreviousSlide() {
@@ -375,17 +414,18 @@ function initPhotoLightbox() {
     showSlide(currentIndex + 1);
   }
 
-  if (openVisualsBtn) openVisualsBtn.addEventListener('click', () => openLightbox(0));
-  if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
-  if (prevBtn) prevBtn.addEventListener('click', showPreviousSlide);
-  if (nextBtn) nextBtn.addEventListener('click', showNextSlide);
-  if (backdrop) backdrop.addEventListener('click', closeLightbox);
+  if (openVisualsBtn)
+    openVisualsBtn.addEventListener("click", () => openLightbox(0));
+  if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
+  if (prevBtn) prevBtn.addEventListener("click", showPreviousSlide);
+  if (nextBtn) nextBtn.addEventListener("click", showNextSlide);
+  if (backdrop) backdrop.addEventListener("click", closeLightbox);
 
-  document.addEventListener('keydown', (e) => {
-    if (lightbox.classList.contains('hidden')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') showPreviousSlide();
-    if (e.key === 'ArrowRight') showNextSlide();
+  document.addEventListener("keydown", (e) => {
+    if (lightbox.classList.contains("hidden")) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") showPreviousSlide();
+    if (e.key === "ArrowRight") showNextSlide();
   });
 }
 
@@ -398,8 +438,10 @@ function initCursorFollower(cardId, followerId, ease, onMove) {
 
   if (!card || !follower) return;
 
-  let targetX = 50, targetY = 50;
-  let currentX = 50, currentY = 50;
+  let targetX = 50,
+    targetY = 50;
+  let currentX = 50,
+    currentY = 50;
   let isHovered = false;
   let rafId = 0;
 
@@ -408,7 +450,10 @@ function initCursorFollower(cardId, followerId, ease, onMove) {
 
   // Loop only runs while hovered; rafId guards against double loops on quick re-entry
   function tick() {
-    if (!isHovered) { rafId = 0; return; }
+    if (!isHovered) {
+      rafId = 0;
+      return;
+    }
     currentX += (targetX - currentX) * ease;
     currentY += (targetY - currentY) * ease;
     follower.style.left = `${currentX}px`;
@@ -416,16 +461,16 @@ function initCursorFollower(cardId, followerId, ease, onMove) {
     rafId = requestAnimationFrame(tick);
   }
 
-  card.addEventListener('mouseenter', () => {
+  card.addEventListener("mouseenter", () => {
     isHovered = true;
     if (!rafId) rafId = requestAnimationFrame(tick);
   });
 
-  card.addEventListener('mouseleave', () => {
+  card.addEventListener("mouseleave", () => {
     isHovered = false;
   });
 
-  card.addEventListener('mousemove', (e) => {
+  card.addEventListener("mousemove", (e) => {
     const rect = card.getBoundingClientRect();
     targetX = Math.max(20, Math.min(rect.width - 20, e.clientX - rect.left));
     targetY = Math.max(20, Math.min(rect.height - 20, e.clientY - rect.top));
@@ -434,25 +479,25 @@ function initCursorFollower(cardId, followerId, ease, onMove) {
 }
 
 function initGokbagDroneMicroInteraction() {
-  const hud = document.getElementById('drone-hud');
-  initCursorFollower('gokbag-card', 'mini-drone', 0.12, (x, y) => {
+  const hud = document.getElementById("drone-hud");
+  initCursorFollower("gokbag-card", "mini-drone", 0.12, (x, y) => {
     if (hud) hud.textContent = `RADAR: [X:${Math.round(x)} Y:${Math.round(y)}]`;
   });
 }
 
 function initPistiCardMicroInteraction() {
   // Slower ease than the drone so the card visibly trails the cursor
-  initCursorFollower('pisti-card', 'pisti-card-follower', 0.07);
+  initCursorFollower("pisti-card", "pisti-card-follower", 0.07);
 }
 
 /**
  * 6. EMAIL COPY TRIGGER WITH TOAST
  */
-window.copyEmail = async function() {
-  const emailEl = document.getElementById('contact-email');
-  const copyLabel = document.getElementById('copy-label');
-  const toast = document.getElementById('toast');
-  const toastText = document.getElementById('toast-text');
+window.copyEmail = async function () {
+  const emailEl = document.getElementById("contact-email");
+  const copyLabel = document.getElementById("copy-label");
+  const toast = document.getElementById("toast");
+  const toastText = document.getElementById("toast-text");
 
   if (!emailEl) return;
   const email = emailEl.textContent.trim();
@@ -461,30 +506,30 @@ window.copyEmail = async function() {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       await navigator.clipboard.writeText(email);
     } else {
-      throw new Error('Clipboard API unavailable');
+      throw new Error("Clipboard API unavailable");
     }
   } catch (err) {
-    const input = document.createElement('input');
+    const input = document.createElement("input");
     input.value = email;
     document.body.appendChild(input);
     input.select();
-    document.execCommand('copy');
+    document.execCommand("copy");
     document.body.removeChild(input);
   }
 
-  if (copyLabel) copyLabel.textContent = 'Copied!';
+  if (copyLabel) copyLabel.textContent = "Copied!";
   if (toast) {
     if (toastText) toastText.textContent = `Copied ${email} to clipboard!`;
-    toast.classList.remove('toast-hidden');
-    toast.classList.add('toast-visible');
+    toast.classList.remove("toast-hidden");
+    toast.classList.add("toast-visible");
 
     setTimeout(() => {
-      toast.classList.remove('toast-visible');
-      toast.classList.add('toast-hidden');
+      toast.classList.remove("toast-visible");
+      toast.classList.add("toast-hidden");
     }, 2500);
   }
 
   setTimeout(() => {
-    if (copyLabel) copyLabel.textContent = 'Copy';
+    if (copyLabel) copyLabel.textContent = "Copy";
   }, 2200);
 };

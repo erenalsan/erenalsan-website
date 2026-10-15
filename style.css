@@ -1,63 +1,61 @@
 /* ==========================================================================
    EREN ALSAN PORTFOLIO — STYLE.CSS
    Curated Color Palettes:
-   - Dark (Default): "Space Indigo & Lilac Ash" (#1d1d33, #2a2a48, #4a4e69, #39395f, #c9ada7, #f2e9e4, #9a8c98)
-   - Light: "Golden Summer Fields" (#fefae0, #ffffff, #e9edc9, #faedcd, #d4a373, #ccd5ae, #1e293b, #64748b)
+   - Dark (Default): "Deep Space Slate" (#0b0f17, #161e2e, #283548, #1e293b, #38bdf8, #f8fafc, #94a3b8)
+   - Light: "Nordic Slate & Warm Paper" (#f4f4f0, #ffffff, #e2e8f0, #f1f5f9, #d97706, #0f172a, #64748b)
    ========================================================================== */
 
-/* --- DARK THEME PALETTE ("Space Indigo & Lilac Ash" - Default) --- */
+/* --- DARK THEME PALETTE ("Deep Space Slate" - Default) --- */
 :root,
 html[data-theme="dark"],
 html.dark {
-  --bg: #1d1d33;              /* Deep Space Indigo */
-  --card: #2a2a48;            /* Elevated Grape/Indigo surface */
-  --card-border: #4a4e69;     /* Dusty Grape */
-  --badge-bg: #39395f;
-  --accent: #c9ada7;          /* Almond Silk */
-  --accent-hover: #9a8c98;    /* Lilac Ash */
-  --text-main: #f2e9e4;       /* Seashell */
-  --text-muted: #9a8c98;      /* Lilac Ash */
+  --bg: #0b0f17;              /* Deep Obsidian */
+  --card: #161e2e;            /* Elevated Slate/Navy surface */
+  --card-border: #283548;     /* Steel border */
+  --badge-bg: #1e293b;
+  --accent: #38bdf8;          /* Sky Blue */
+  --accent-hover: #7dd3fc;
+  --text-main: #f8fafc;       /* Off-White */
+  --text-muted: #94a3b8;
 
-  --muted-accent: #9a8c98;
-  --accent-bg: rgba(201, 173, 167, 0.15);
-  --accent-border: rgba(201, 173, 167, 0.35);
+  --accent-bg: rgba(56, 189, 248, 0.12);
+  --accent-border: rgba(56, 189, 248, 0.35);
 
-  --btn-solid-bg: #c9ada7;
-  --btn-solid-text: #1d1d33;
-  --btn-solid-hover: #f2e9e4;
+  --btn-solid-bg: #38bdf8;
+  --btn-solid-text: #0b0f17;
+  --btn-solid-hover: #7dd3fc;
 
-  --nav-bg: rgba(29, 29, 51, 0.92);
-  --nav-border: #4a4e69;
-  --card-hover: #303052;
-  --card-shadow: 0 14px 32px -18px rgba(0, 0, 0, 0.7);
+  --nav-bg: rgba(11, 15, 23, 0.9);
+  --nav-border: #283548;
+  --card-hover: #1a2336;
+  --card-shadow: 0 14px 32px -18px rgba(0, 0, 0, 0.8);
 }
 
-/* --- LIGHT THEME PALETTE ("Golden Summer Fields") --- */
+/* --- LIGHT THEME PALETTE ("Nordic Slate & Warm Paper") --- */
 :root[data-theme="light"],
 html[data-theme="light"],
 html.light,
 body.light {
-  --bg: #fefae0;              /* Cornsilk */
+  --bg: #f4f4f0;              /* Warm paper */
   --card: #ffffff;            /* Crisp white so cards pop */
-  --card-border: #e9edc9;     /* Beige / Sage line */
-  --badge-bg: #faedcd;        /* Papaya Whip */
-  --accent: #d4a373;          /* Light Bronze */
-  --accent-hover: #ccd5ae;    /* Dry Sage */
-  --muted-accent: #ccd5ae;    /* Dry Sage */
-  --text-main: #1e293b;       /* Deep Slate */
+  --card-border: #e2e8f0;     /* Slate border */
+  --badge-bg: #f1f5f9;
+  --accent: #d97706;          /* Warm Amber */
+  --accent-hover: #fbbf24;
+  --text-main: #0f172a;       /* Deep Slate Black */
   --text-muted: #64748b;
 
-  --accent-bg: rgba(212, 163, 115, 0.18);
-  --accent-border: rgba(212, 163, 115, 0.45);
+  --accent-bg: rgba(217, 119, 6, 0.1);
+  --accent-border: rgba(217, 119, 6, 0.35);
 
-  --btn-solid-bg: #d4a373;
+  --btn-solid-bg: #d97706;
   --btn-solid-text: #ffffff;
-  --btn-solid-hover: #b58253;
+  --btn-solid-hover: #b45309;
 
-  --nav-bg: rgba(254, 250, 224, 0.94);
-  --nav-border: #e9edc9;
-  --card-hover: #fffef8;
-  --card-shadow: 0 14px 30px -18px rgba(30, 41, 59, 0.28);
+  --nav-bg: rgba(244, 244, 240, 0.92);
+  --nav-border: #e2e8f0;
+  --card-hover: #ffffff;
+  --card-shadow: 0 14px 30px -18px rgba(15, 23, 42, 0.25);
 }
 
 /* --- Base Rules --- */
@@ -492,4 +490,8 @@ html.light .theme-moon-icon {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
+}
+
+::selection {
+  background-color: var(--accent-border);
 }
