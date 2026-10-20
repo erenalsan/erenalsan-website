@@ -763,6 +763,7 @@ const ACHIEVEMENTS = [
   { id: "castle", icon: "♜", title: "Castel dell'Ovo", desc: "Click the castle. It's the one behind me in my photo, in Naples.", hint: "The seafront has a landmark. Knock on it.", xp: 20, secret: true },
   { id: "tuner", icon: "⇆", title: "Hyperparameter tuner", desc: "Move the confidence threshold in the Vision Lab.", xp: 15 },
   { id: "sharp", icon: "⊕", title: "Sharpshooter", desc: "Tag 10 objects in one Vision Lab round.", xp: 50 },
+  { id: "dj", icon: "♫", title: "Same wavelength", desc: "Check what I'm listening to.", hint: "This page has a soundtrack.", xp: 15, secret: true },
   { id: "away", icon: "↺", title: "Target reacquired", desc: "Leave the browser tab and come back.", hint: "The page notices when you look away.", xp: 10, secret: true },
   { id: "signal", icon: "✉", title: "Signal sent", desc: "Copy my email address.", xp: 30 },
   { id: "paper", icon: "▼", title: "Paper trail", desc: "Download my CV.", xp: 30 },
@@ -1673,4 +1674,35 @@ function initLab() {
   document.addEventListener("visibilitychange", run);
   resize();
   run();
+}
+
+// Last played track, scrobbled to Last.fm. The API key is read-only, so it is safe in the page.
+const LASTFM_USER = "rnlsn326";
+const LASTFM_KEY = "b9e6668daf42647b50200e75d86a5b7d";
+fetch(`https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USER}&api_key=${LASTFM_KEY}&format=json&limit=1`)
+  .then((r) => r.json())
+  .then((d) => {
+    const t = d.recenttracks?.track?.[0];
+    const np = document.getElementById("now-playing");
+    if (!t || !np) return;
+    const live = t["@attr"]?.nowplaying === "true";
+    // Last.fm serves a grey star placeholder when it has no cover; keep our empty tile instead
+    const art = t.image?.[2]?.["#text"];
+    if (art && !art.includes("2a96cbd8b46e442fc41c2b86b821562f")) np.querySelector(".np-cover").src = art;
+    np.querySelector(".np-label").textContent = live ? "Listening now" : `Last played ${timeAgo(t.date?.uts)}`;
+    np.querySelector(".np-title").textContent = t.name;
+    np.querySelector(".np-artist").textContent = t.artist["#text"];
+    np.classList.toggle("is-live", live);
+    np.classList.add("is-ready");
+    np.addEventListener("click", () => unlock("dj"));
+  })
+  .catch(() => {}); // card stays invisible if Last.fm is unreachable
+
+function timeAgo(uts) {
+  const s = Date.now() / 1000 - Number(uts);
+  if (!(s >= 0)) return "";
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  if (s < 3600) return rtf.format(-Math.max(1, Math.round(s / 60)), "minute");
+  if (s < 86400) return rtf.format(-Math.round(s / 3600), "hour");
+  return rtf.format(-Math.round(s / 86400), "day");
 }
