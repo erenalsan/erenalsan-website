@@ -1679,29 +1679,80 @@ function initLab() {
 // Last played track, scrobbled to Last.fm. The API key is read-only, so it is safe in the page.
 const LASTFM_USER = "rnlsn326";
 const LASTFM_KEY = "b9e6668daf42647b50200e75d86a5b7d";
-fetch(`https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USER}&api_key=${LASTFM_KEY}&format=json&limit=1`)
-  .then((r) => r.json())
+const lastfm = (query) =>
+  fetch(`https://ws.audioscrobbler.com/2.0/?${query}&user=${LASTFM_USER}&api_key=${LASTFM_KEY}&format=json`).then((r) => r.json());
+// Last.fm serves a grey star placeholder when it has no cover
+// Size 0 is the 34px thumbnail, which the CSS scales up with hard pixels for the 8-bit look
+const coverOf = (item, size = 0) => {
+  const art = item.image?.[size]?.["#text"];
+  return art && !art.includes("2a96cbd8b46e442fc41c2b86b821562f") ? art : "";
+};
+
+const np = document.getElementById("now-playing");
+let npTrack = "";
+function loadNowPlaying() {
+  if (document.hidden) return;
+  lastfm("method=user.getrecenttracks&limit=1")
+    .then((d) => {
+      const t = d.recenttracks?.track?.[0];
+      if (!t) return;
+      const live = t["@attr"]?.nowplaying === "true";
+      const cover = np.querySelector(".np-cover");
+      const art = coverOf(t);
+      if (art) cover.src = art;
+      else cover.removeAttribute("src");
+      np.querySelector(".np-label").textContent = live ? "Now playing" : `Played ${timeAgo(t.date?.uts)}`;
+      np.querySelector(".np-title").textContent = t.name;
+      np.querySelector(".np-artist").textContent = t.artist["#text"];
+      np.classList.toggle("is-live", live);
+      np.classList.add("is-ready");
+      // Flash the frame when the song changes (not on the first load)
+      const key = `${t.name}
+${t.artist["#text"]}`;
+      if (npTrack && key !== npTrack) {
+        np.classList.remove("is-new");
+        void np.offsetWidth; // restart the animation
+        np.classList.add("is-new");
+      }
+      npTrack = key;
+    })
+    .catch(() => {}); // card keeps its last state (or stays invisible) if Last.fm is unreachable
+}
+if (np) {
+  np.addEventListener("click", () => unlock("dj"));
+  np.querySelector(".np-cover").onerror = (e) => e.target.removeAttribute("src");
+  loadNowPlaying();
+  setInterval(loadNowPlaying, 60000); // skipped while the tab is in the background
+  document.addEventListener("visibilitychange", loadNowPlaying);
+}
+
+// Most-played albums this month, in Beyond the code
+lastfm("method=user.gettopalbums&period=1month&limit=10")
   .then((d) => {
-    const t = d.recenttracks?.track?.[0];
-    const np = document.getElementById("now-playing");
-    if (!t || !np) return;
-    const live = t["@attr"]?.nowplaying === "true";
-    // Last.fm serves a grey star placeholder when it has no cover; keep our empty tile instead
-    const art = t.image?.[2]?.["#text"];
-    if (art && !art.includes("2a96cbd8b46e442fc41c2b86b821562f")) np.querySelector(".np-cover").src = art;
-    np.querySelector(".np-label").textContent = live ? "Listening now" : `Last played ${timeAgo(t.date?.uts)}`;
-    np.querySelector(".np-title").textContent = t.name;
-    np.querySelector(".np-artist").textContent = t.artist["#text"];
-    np.classList.toggle("is-live", live);
-    np.classList.add("is-ready");
-    np.addEventListener("click", () => unlock("dj"));
+    const box = document.getElementById("on-repeat");
+    const albums = (d.topalbums?.album || []).filter((a) => coverOf(a)).slice(0, 7);
+    if (!box || !albums.length) return;
+    box.querySelector(".albums").replaceChildren(...albums.map((a) => {
+      const li = document.createElement("li");
+      const img = Object.assign(document.createElement("img"), {
+        src: coverOf(a),
+        alt: `${a.name} by ${a.artist.name}`,
+        title: `${a.name} by ${a.artist.name}, ${a.playcount} plays`,
+        loading: "lazy",
+      });
+      img.dataset.detect = a.artist.name.toLowerCase();
+      img.onerror = () => li.remove(); // Last.fm sometimes lists a thumbnail it can't serve
+      li.append(img);
+      return li;
+    }));
+    box.hidden = false;
   })
-  .catch(() => {}); // card stays invisible if Last.fm is unreachable
+  .catch(() => {}); // section stays hidden if Last.fm is unreachable
 
 function timeAgo(uts) {
   const s = Date.now() / 1000 - Number(uts);
   if (!(s >= 0)) return "";
-  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto", style: "short" });
   if (s < 3600) return rtf.format(-Math.max(1, Math.round(s / 60)), "minute");
   if (s < 86400) return rtf.format(-Math.round(s / 3600), "hour");
   return rtf.format(-Math.round(s / 86400), "day");
