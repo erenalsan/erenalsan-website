@@ -1682,9 +1682,8 @@ const LASTFM_KEY = "b9e6668daf42647b50200e75d86a5b7d";
 const lastfm = (query) =>
   fetch(`https://ws.audioscrobbler.com/2.0/?${query}&user=${LASTFM_USER}&api_key=${LASTFM_KEY}&format=json`).then((r) => r.json());
 // Last.fm serves a grey star placeholder when it has no cover
-// Size 0 is the 34px thumbnail, which the CSS scales up with hard pixels for the 8-bit look
-const coverOf = (item, size = 0) => {
-  const art = item.image?.[size]?.["#text"];
+const coverOf = (item) => {
+  const art = item.image?.[2]?.["#text"]; // 174px, sharp enough for retina at card size
   return art && !art.includes("2a96cbd8b46e442fc41c2b86b821562f") ? art : "";
 };
 
