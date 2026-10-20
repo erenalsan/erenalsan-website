@@ -666,20 +666,41 @@ html.js .view:not(.is-active) { display: none; }
 }
 .pursuit-title { font-size: 1rem; letter-spacing: -0.01em; margin-bottom: 0.25rem; }
 .pursuit p { color: var(--muted); font-size: 0.875rem; }
-/* Most-played albums this month, from Last.fm */
-.albums { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.75rem; margin-top: 0.625rem; padding: 3px; }
-/* A couple of spares load in case a thumbnail fails; only the first five show */
-.albums li:nth-child(n + 6) { display: none; }
-/* Mini versions of the portrait frame */
-.albums img {
-  width: 100%;
-  aspect-ratio: 1;
+/* Most-played songs this month, from Last.fm: cover in a mini portrait frame, then name and artist */
+.tracks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem 1rem; margin-top: 0.75rem; padding: 3px; }
+.tracks li { display: flex; align-items: center; gap: 0.625rem; min-width: 0; }
+.tracks img {
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
   object-fit: cover;
   background: var(--surface);
   border: 3px solid;
   border-color: #f6d365 #b37a14 #b37a14 #f6d365;
   box-shadow: 0 0 0 1px #2a1a05, 3px 3px 0 1px rgba(10, 14, 40, 0.3);
 }
+.tr-text { min-width: 0; display: flex; flex-direction: column; line-height: 1.3; }
+.tr-name, .tr-artist { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tr-name { font-size: 0.8125rem; font-weight: 600; }
+.tr-artist { font-size: 0.75rem; color: var(--muted); }
+/* Top artists this month as an arcade high-score table, in the same gold frame */
+.hiscore {
+  margin-top: 1rem;
+  padding: 0.625rem 0.75rem;
+  background: #14213d;
+  color: #fff;
+  border: 4px solid;
+  border-color: #f6d365 #b37a14 #b37a14 #f6d365;
+  box-shadow: 0 0 0 2px #2a1a05, 5px 5px 0 2px rgba(10, 14, 40, 0.3);
+  font: 0.5rem/1.8 var(--font-pixel);
+  text-transform: uppercase;
+}
+.hiscore .hiscore-title { margin-bottom: 0.5rem; text-align: center; color: var(--signal); font-size: 0.625rem; letter-spacing: 0.1em; } /* beats .pursuit p */
+.hiscore-list li { display: flex; gap: 0.75rem; padding: 0.125rem 0; }
+.hiscore-list li:first-child { color: var(--signal); }
+.hs-rank { flex: none; width: 2.25rem; }
+.hs-name { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.hs-score { flex: none; }
 
 /* --- Photos --- */
 .photo-grid {

@@ -1067,6 +1067,14 @@ const GULL_SPRITES = [
   ["#...#", ".#.#.", "..#.."],
   [".....", "##.##", "..#.."],
 ];
+// Perched gull facing left; the second frame has its head down, pecking
+const GULL_PERCHED = [
+  [".##....", "b####..", ".#wwww#", "..l.l.."],
+  [".......", ".####..", "b#wwww#", "..l.l.."],
+];
+const FISH_SPRITE = ["#.##.", ".####", "#.##."]; // facing right
+const FISH_T = 16; // frames a fish spends in the air
+const flipSprite = (rows) => rows.map((r) => [...r].reverse().join(""));
 
 function seeded(seed) {
   return () => (seed = (seed * 16807) % 2147483647) / 2147483647;
@@ -1108,6 +1116,7 @@ function initHeroScene() {
   let W = 0, H = 0, P = 1;
   let L = null; // layout + prebuilt layers
   let frame = 0, boatX = 0, timer = 0, onScreen = true;
+  let steam = []; // puffs from the yacht's funnel after a click
 
   function resize() {
     const r = hero.getBoundingClientRect();
@@ -1272,6 +1281,24 @@ function initHeroScene() {
       }
     }
 
+    // Perches for the landing gulls: two battlements, plus the rocks right of the castle when there's room.
+    // Each perch sits on whatever is solid in the foreground there, so feet never float.
+    const solid = f.getImageData(0, 0, W, H).data;
+    const topAt = (x) => {
+      for (let y = 0; y < H; y++) if (solid[(y * W + x) * 4 + 3] > 200) return y;
+      return H;
+    };
+    const perchXs = [cx + 3, cx + 5 * (Math.floor((CW - 3) / 5) - 1) - 2]; // feet (columns 2 and 4) on a merlon
+    for (let x = cx + CW + 8; x < W - 8; x += 10) perchXs.push(x);
+    const perches = perchXs
+      .map((x) => ({ x, y: Math.min(topAt(x + 2), topAt(x + 4)) - 4, taken: false }))
+      .filter((p) => p.y > 0 && p.y < H - 4)
+      .sort(() => rand() - 0.5);
+    const birds = perches.slice(0, 3).map((p, i) => {
+      p.taken = true;
+      return { p, x: p.x, y: p.y, state: "perch", t: 50 + i * 70, face: rand() < 0.5 ? -1 : 1 };
+    });
+
     // Clouds, pre-rendered once each
     const clouds = [0, 1, 2].map((i) => {
       const w = 18 + Math.round(rand() * 14);
@@ -1300,7 +1327,7 @@ function initHeroScene() {
       ? []
       : [0, 1, 2].map((i) => ({ x: rand() * W, y: Math.round(hz * (0.2 + rand() * 0.35)), v: 0.3 + rand() * 0.25, p: i * 3 }));
 
-    L = { c, night, hz, cx, CW, ty, by, brickH, orbX, back, front, clouds, stars, gulls };
+    L = { c, night, narrow, hz, cx, CW, ty, by, brickH, orbX, back, front, clouds, stars, gulls, perches, birds, fish: [] };
     if (!boatX) boatX = Math.round(W * 0.15);
   }
 
@@ -1345,7 +1372,47 @@ function initHeroScene() {
       ctx.fillRect(bxr - 2, hz, 2, 1);
     }
 
+    // Steam puffs: grow, rise, drift back as the yacht sails on, then break up
+    ctx.fillStyle = c.cloud[0];
+    steam.forEach((s) => {
+      if (!s.on) return;
+      const life = s.age - s.delay;
+      const r = Math.min(2, life >> 3);
+      const x = Math.round(s.x - life * 0.2);
+      const y = Math.round(s.y - life * 0.35);
+      for (let dy = -r; dy <= r; dy++) {
+        for (let dx = -r; dx <= r; dx++) {
+          if (dx * dx + dy * dy > r * r + 1 || (life > 18 && (dx + dy + life) & 1)) continue;
+          ctx.fillRect(x + dx, y + dy, 1, 1);
+        }
+      }
+    });
+
+    // Jumping fish, with a splash where each one leaves and re-enters the water
+    ctx.fillStyle = c.glint;
+    L.fish.forEach((fi) => {
+      if (fi.age < FISH_T) {
+        const u = fi.age / FISH_T;
+        const x = Math.round(fi.x + fi.dir * 10 * u) - 2;
+        const y = Math.round(fi.y - 4 * fi.h * u * (1 - u)) - 2;
+        drawSprite(ctx, fi.dir > 0 ? FISH_SPRITE : flipSprite(FISH_SPRITE), x, y, { "#": c.glint });
+      }
+      [[fi.x, fi.age], [fi.x + fi.dir * 10, fi.age - FISH_T]].forEach(([sx, a]) => {
+        if (a < 0 || a > 3) return;
+        ctx.fillRect(sx - 2 - a, fi.y - 1 - (a >> 1), 1, 1);
+        ctx.fillRect(sx + 2 + a, fi.y - 1 - (a >> 1), 1, 1);
+        ctx.fillRect(sx, fi.y - 2 - a, 1, 1);
+      });
+    });
+
     ctx.drawImage(L.front, 0, 0);
+
+    L.birds.forEach((b) => {
+      if (b.state === "away") return;
+      let rows = b.state === "perch" ? GULL_PERCHED[b.t % 37 < 4 ? 1 : 0] : GULL_SPRITES[(frame >> 1) & 1];
+      if (b.state === "perch" && b.face > 0) rows = flipSprite(rows);
+      drawSprite(ctx, rows, Math.round(b.x), Math.round(b.y), { "#": c.bird, w: c.hull[1], b: "#ffb23f", l: "#e08a3c" });
+    });
 
     L.gulls.forEach((gl) => {
       const x = ((gl.x + frame * gl.v) % (W + 10)) - 5;
@@ -1354,12 +1421,84 @@ function initHeroScene() {
     });
   }
 
+  // Gulls take turns landing on a free perch, sitting a while and flying off; fish jump; steam rises
+  function stepLife() {
+    if (!L) return;
+    L.birds.forEach((b) => {
+      b.t--;
+      if (b.state === "perch" && b.t <= 0) {
+        b.state = "fly";
+        b.p.taken = false;
+        b.vx = b.face * 0.7;
+        b.vy = -0.5;
+      } else if (b.state === "fly") {
+        b.x += b.vx;
+        b.y += b.vy;
+        b.vy -= 0.03;
+        if (b.y < -8) {
+          b.state = "away";
+          b.t = 30 + Math.random() * 90;
+        }
+      } else if (b.state === "away" && b.t <= 0) {
+        const free = L.perches.filter((p) => !p.taken);
+        if (!free.length) {
+          b.t = 30;
+          return;
+        }
+        b.p = free[Math.floor(Math.random() * free.length)];
+        b.p.taken = true;
+        b.face = Math.random() < 0.5 ? -1 : 1;
+        b.sx = b.p.x - b.face * 40;
+        b.sy = b.p.y - 30;
+        b.n = 0;
+        b.state = "land";
+      } else if (b.state === "land") {
+        const u = Math.min(1, ++b.n / 30);
+        const e = 1 - (1 - u) * (1 - u); // ease out, so it flares before touching down
+        b.x = b.sx + (b.p.x - b.sx) * e;
+        b.y = b.sy + (b.p.y - b.sy) * e;
+        if (u === 1) {
+          b.state = "perch";
+          b.t = 60 + Math.random() * 140;
+        }
+      }
+    });
+
+    // Fish only on desktop: on phones the text covers the open water
+    const seaEnd = H - L.brickH;
+    if (!L.narrow && L.fish.length < 2 && Math.random() < 1 / 36) {
+      L.fish.push({
+        x: Math.round(W * 0.5 + Math.random() * (W * 0.5 - 12)),
+        y: Math.round(L.hz + 6 + Math.random() * Math.max(1, seaEnd - L.hz - 14)),
+        dir: Math.random() < 0.5 ? -1 : 1,
+        h: 4 + Math.round(Math.random() * 4),
+        age: 0,
+      });
+    }
+    L.fish = L.fish.filter((fi) => ++fi.age < FISH_T + 4);
+
+    steam = steam.filter((s) => {
+      if (++s.age > s.delay && !s.on) {
+        s.on = true;
+        s.x = boatX + 6;
+        s.y = L.hz - 5;
+      }
+      return s.age < s.delay + 28;
+    });
+  }
+
+  function puff() {
+    for (let i = 0; i < 6; i++) steam.push({ delay: i * 3, age: 0, on: false, x: 0, y: 0 });
+    blip([196, 196, 147]); // horn
+  }
+
   function tick() {
     timer = 0;
     if (!onScreen || document.hidden) return;
     frame++;
     boatX += 0.25;
     if (boatX > W + 2) boatX = -16;
+    stepLife();
     draw();
     timer = setTimeout(tick, 1000 / 12); // 12 fps, on purpose: it's 8-bit
   }
@@ -1384,6 +1523,7 @@ function initHeroScene() {
   }
   hero.addEventListener("click", (e) => {
     const hit = sceneHit(e);
+    if (hit === "ahoy") puff();
     if (hit) unlock(hit);
   });
   hero.addEventListener("pointermove", (e) => {
@@ -1725,28 +1865,56 @@ if (np) {
   document.addEventListener("visibilitychange", loadNowPlaying);
 }
 
-// Most-played albums this month, in Beyond the code
-lastfm("method=user.gettopalbums&period=1month&limit=10")
+// Most-played songs this month, in Beyond the code. Top-track results carry no artwork,
+// so each song's album cover comes from its own track.getInfo call.
+lastfm("method=user.gettoptracks&period=1month&limit=4")
   .then((d) => {
     const box = document.getElementById("on-repeat");
-    const albums = (d.topalbums?.album || []).filter((a) => coverOf(a)).slice(0, 7);
-    if (!box || !albums.length) return;
-    box.querySelector(".albums").replaceChildren(...albums.map((a) => {
+    const tracks = d.toptracks?.track || [];
+    if (!box || !tracks.length) return;
+    box.querySelector(".tracks").replaceChildren(...tracks.map((t) => {
       const li = document.createElement("li");
-      const img = Object.assign(document.createElement("img"), {
-        src: coverOf(a),
-        alt: `${a.name} by ${a.artist.name}`,
-        title: `${a.name} by ${a.artist.name}, ${a.playcount} plays`,
-        loading: "lazy",
-      });
-      img.dataset.detect = a.artist.name.toLowerCase();
-      img.onerror = () => li.remove(); // Last.fm sometimes lists a thumbnail it can't serve
-      li.append(img);
+      li.dataset.detect = t.artist.name.toLowerCase();
+      li.title = `${t.name} by ${t.artist.name}, ${t.playcount} plays`;
+      const img = Object.assign(document.createElement("img"), { alt: "", loading: "lazy" });
+      img.onerror = () => img.removeAttribute("src"); // keep the empty frame
+      const text = Object.assign(document.createElement("span"), { className: "tr-text" });
+      text.append(
+        Object.assign(document.createElement("span"), { className: "tr-name", textContent: t.name }),
+        Object.assign(document.createElement("span"), { className: "tr-artist", textContent: t.artist.name }));
+      li.append(img, text);
+      lastfm(`method=track.getinfo&artist=${encodeURIComponent(t.artist.name)}&track=${encodeURIComponent(t.name)}`)
+        .then((info) => {
+          const art = info.track?.album && coverOf(info.track.album);
+          if (art) img.src = art;
+        })
+        .catch(() => {});
       return li;
     }));
     box.hidden = false;
+    loadHiscores(box);
   })
   .catch(() => {}); // section stays hidden if Last.fm is unreachable
+
+// Top artists this month, shown as an arcade high-score table under the songs
+function loadHiscores(box) {
+  const ranks = ["1st", "2nd", "3rd", "4th", "5th"];
+  lastfm("method=user.gettopartists&period=1month&limit=5")
+    .then((d) => {
+      const artists = d.topartists?.artist || [];
+      const table = box.querySelector(".hiscore");
+      if (!table || !artists.length) return;
+      table.querySelector(".hiscore-list").replaceChildren(...artists.map((a, i) => {
+        const li = document.createElement("li");
+        li.dataset.detect = a.name.toLowerCase();
+        li.append(...[ranks[i], a.name, String(a.playcount).padStart(5, "0")].map((text, k) =>
+          Object.assign(document.createElement("span"), { className: ["hs-rank", "hs-name", "hs-score"][k], textContent: text })));
+        return li;
+      }));
+      table.hidden = false;
+    })
+    .catch(() => {});
+}
 
 function timeAgo(uts) {
   const s = Date.now() / 1000 - Number(uts);
