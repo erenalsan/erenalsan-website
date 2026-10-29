@@ -130,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initGokbagDroneMicroInteraction();
   initPistiCardMicroInteraction();
   initReveal();
+  initContact(); // before initViews, so it hears the first viewchange
   initViews();
   initHeroScene();
   initLab();
@@ -767,6 +768,7 @@ const ACHIEVEMENTS = [
   { id: "away", icon: "↺", title: "Target reacquired", desc: "Leave the browser tab and come back.", hint: "The page notices when you look away.", xp: 10, secret: true },
   { id: "signal", icon: "✉", title: "Signal sent", desc: "Copy my email address.", xp: 30 },
   { id: "paper", icon: "▼", title: "Paper trail", desc: "Download my CV.", xp: 30 },
+  { id: "draft", icon: "✎", title: "Letter drafted", desc: "Start an email from the Write to me page.", xp: 25 },
   { id: "konami", icon: "↑", title: "Cheat code", desc: "↑ ↑ ↓ ↓ ← → ← → B A", hint: "Old games had codes. So does this site.", xp: 50, secret: true },
   { id: "legend", icon: "★", title: "100% complete", desc: "Unlock every other achievement.", xp: 100 },
 ];
@@ -874,6 +876,20 @@ function renderQuest(bump) {
   const fill = document.getElementById("quest-fill");
   if (summary) summary.textContent = `${done} / ${ACHIEVEMENTS.length} · ${xp} XP · LV ${lvl + 1} ${LEVELS[lvl][1]}`;
   if (fill) fill.style.width = `${(done / ACHIEVEMENTS.length) * 100}%`;
+
+  // End-of-run card on Write to me
+  const setText = (id, text) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  };
+  const secrets = ACHIEVEMENTS.filter((a) => a.secret);
+  setText("end-level", `LV ${lvl + 1} ${LEVELS[lvl][1]}`);
+  setText("end-xp", String(xp).padStart(6, "0"));
+  setText("end-ach", `${done} / ${ACHIEVEMENTS.length}`);
+  setText("end-secret", `${secrets.filter((a) => quest.done[a.id]).length} / ${secrets.length}`);
+  setText("end-best", quest.best ? `${quest.best} tagged` : "Not played");
+  const endFill = document.getElementById("end-fill");
+  if (endFill) endFill.style.width = `${(done / ACHIEVEMENTS.length) * 100}%`;
 
   const grid = document.getElementById("quest-grid");
   if (grid) {
@@ -1764,6 +1780,7 @@ function initLab() {
     if (best) {
       quest.best = score;
       saveQuest();
+      renderQuest(false);
     }
     notify({
       kicker: best ? "New high score" : "Round over",
@@ -1814,6 +1831,49 @@ function initLab() {
   document.addEventListener("visibilitychange", run);
   resize();
   run();
+}
+
+/**
+ * 11. WRITE TO ME: drafting achievement, local time in Passau, and the arcade "Continue?" countdown
+ */
+function initContact() {
+  document.querySelectorAll("[data-draft]").forEach((a) =>
+    a.addEventListener("click", () => unlock("draft")),
+  );
+
+  const clock = document.getElementById("local-time");
+  if (clock) {
+    const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Berlin", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+    const tick = () => {
+      const time = fmt.format(new Date());
+      const awake = Number(time.slice(0, 2)) >= 8;
+      clock.textContent = `It's ${time} in Passau, so I'm ${awake ? "probably awake" : "probably asleep. I'll read it in the morning"}.`;
+    };
+    tick();
+    setInterval(tick, 30000);
+  }
+
+  // Counts 9 to 0 each time the tab opens, then the button blinks like an arcade "insert coin"
+  const btn = document.getElementById("end-continue");
+  const label = document.getElementById("end-label");
+  const count = document.getElementById("end-count");
+  if (!btn || !label || !count) return;
+  let timer = 0;
+  document.addEventListener("viewchange", (e) => {
+    clearInterval(timer);
+    if (e.detail !== "contact") return;
+    let n = 9;
+    btn.classList.remove("is-over");
+    label.textContent = "Continue?";
+    count.textContent = n;
+    timer = setInterval(() => {
+      if (--n > 0) return void (count.textContent = n);
+      clearInterval(timer);
+      btn.classList.add("is-over");
+      label.textContent = "Insert coin: write to me ▶";
+      count.textContent = "";
+    }, 1000);
+  });
 }
 
 // Last played track, scrobbled to Last.fm. The API key is read-only, so it is safe in the page.
