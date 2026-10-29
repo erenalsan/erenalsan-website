@@ -11,7 +11,7 @@ const PROJECTS_DATA = {
     title: "Minimalframe",
     subtitle: "Local-First Photo Processing & Formatting Engine",
     category: "Cross-Platform PWA & Native Android",
-    status: "In Progress / Active Development",
+    status: "Phase 1 Released / Open Source",
     github: "https://github.com/rnlsn326/minimalframe",
     image: "assets/projects/minimalframe.jpg",
     stack: [
@@ -129,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initPhotoLightbox();
   initGokbagDroneMicroInteraction();
   initPistiCardMicroInteraction();
+  initCursorFollower("minimalframe-card", "polaroid-follower", 0.07);
   initReveal();
   initContact(); // before initViews, so it hears the first viewchange
   initViews();
