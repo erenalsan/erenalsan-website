@@ -130,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initGokbagDroneMicroInteraction();
   initPistiCardMicroInteraction();
   initCursorFollower("minimalframe-card", "polaroid-follower", 0.07);
+  initSkillSlots();
   initReveal();
   initContact(); // before initViews, so it hears the first viewchange
   initViews();
@@ -713,6 +714,19 @@ function initPistiCardMicroInteraction() {
   });
 }
 
+// Hovering (or tapping) a skill slot marks it inspected; all four unlocks an achievement
+function initSkillSlots() {
+  const slots = document.querySelectorAll("[data-skill-slot]");
+  const inspect = (slot) => {
+    slot.classList.add("is-inspected");
+    if ([...slots].every((s) => s.classList.contains("is-inspected"))) unlock("inventory");
+  };
+  slots.forEach((slot) => {
+    slot.addEventListener("mouseenter", () => inspect(slot));
+    slot.addEventListener("click", () => inspect(slot));
+  });
+}
+
 /**
  * 7. EMAIL COPY TRIGGER WITH TOAST
  */
@@ -767,6 +781,7 @@ const ACHIEVEMENTS = [
   { id: "sharp", icon: "⊕", title: "Sharpshooter", desc: "Tag 10 objects in one Vision Lab round.", xp: 50 },
   { id: "dj", icon: "♫", title: "Same wavelength", desc: "Check what I'm listening to.", hint: "This page has a soundtrack.", xp: 15, secret: true },
   { id: "away", icon: "↺", title: "Target reacquired", desc: "Leave the browser tab and come back.", hint: "The page notices when you look away.", xp: 10, secret: true },
+  { id: "inventory", icon: "▧", title: "Full inventory", desc: "Inspect all four skill slots.", xp: 20 },
   { id: "signal", icon: "✉", title: "Signal sent", desc: "Copy my email address.", xp: 30 },
   { id: "paper", icon: "▼", title: "Paper trail", desc: "Download my CV.", xp: 30 },
   { id: "draft", icon: "✎", title: "Letter drafted", desc: "Start an email from the Write to me page.", xp: 25 },

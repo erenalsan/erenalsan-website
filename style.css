@@ -543,6 +543,8 @@ html.js .view:not(.is-active) { display: none; }
 .view-split {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  /* Same 80rem content width as the other pages; the 3rem is the sections' own gutter */
+  padding-inline: max(0px, (100% - 80rem) / 2 - 3rem);
 }
 .view-split > .section:first-child { padding-right: clamp(1rem, 2vw, 2rem); }
 .view-split > .section + .section { padding-left: clamp(1rem, 2vw, 2rem); }
@@ -790,7 +792,16 @@ html.js .path:not(.is-visible)::before { transform: scaleY(0); }
   background: var(--bg);
   border: 2px solid var(--accent);
 }
-.path li:first-child::before { background: var(--accent); }
+.path li::before { transition: transform 0.2s var(--ease-out), background 0.2s ease; }
+.path li > * { transition: transform 0.25s var(--ease-out); }
+.path li:hover::before { background: var(--signal); transform: scale(1.4); }
+.path li:hover > * { transform: translateX(0.25rem); }
+/* Ongoing entries: filled dot with a ping, like a live signal */
+.path li.is-now::before { background: var(--accent); animation: nowPing 2s ease-out infinite; }
+@keyframes nowPing {
+  0%   { box-shadow: 0 0 0 0 var(--accent); }
+  70%, 100% { box-shadow: 0 0 0 0.5rem transparent; }
+}
 .path-year { display: block; font-size: 0.8125rem; color: var(--accent); font-weight: 600; }
 .path-what { display: block; font-size: 1rem; }
 .path-where { display: block; color: var(--muted); font-size: 0.8125rem; margin-bottom: 0.25rem; }
@@ -802,12 +813,60 @@ html.js .path:not(.is-visible)::before { transform: scaleY(0); }
   grid-template-columns: 1fr;
   gap: clamp(0.625rem, 1.8vh, 1rem);
 }
+/* Each category is an inventory slot: lifts on hover, gets a check once inspected */
 .skills-grid > div {
-  padding-top: 0.625rem;
-  border-top: 2px solid var(--accent);
+  position: relative;
+  padding: 0.625rem 0.75rem 0.75rem;
+  border: 1.5px solid var(--line);
+  background: var(--surface);
+  box-shadow: 0 0 0 transparent;
+  /* opacity kept so the data-reveal fade still works */
+  transition: opacity 0.6s var(--ease-out), transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out), border-color 0.2s ease;
 }
-.skills-grid dt { font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; margin-bottom: 0.125rem; }
-.skills-grid dd { margin: 0; color: var(--muted); font-size: 0.875rem; }
+.skills-grid > div:hover {
+  transform: translate(-3px, -3px);
+  border-color: var(--accent);
+  box-shadow: 3px 3px 0 var(--accent);
+}
+.skills-grid > div.is-inspected::after {
+  content: '✓';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.625rem;
+  font: 0.5rem/1 var(--font-pixel);
+  color: var(--accent);
+}
+.skills-grid dt {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: 0.625rem/1.6 var(--font-pixel);
+  margin-bottom: 0.5rem;
+}
+.slot-icon {
+  display: grid;
+  place-items: center;
+  min-width: 1.375rem;
+  height: 1.375rem;
+  padding: 0 0.25rem;
+  background: var(--accent);
+  color: var(--surface);
+  font: 600 0.75rem/1 var(--font-mono);
+}
+.skills-grid dd { display: flex; flex-wrap: wrap; gap: 0.3125rem; margin: 0; }
+.skill {
+  padding: 0.125rem 0.4375rem;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.8125rem;
+  transition: transform 0.15s var(--ease-out), background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.skill:hover {
+  transform: translateY(-2px) rotate(-2deg);
+  background: var(--signal);
+  border-color: var(--signal);
+  color: #14213d;
+}
 
 /* --- Contact (page 06) --- */
 .contact {
@@ -1491,7 +1550,8 @@ body[data-view="overview"] .hero {
   .toast { animation-name: fadeIn; animation-timing-function: ease; }
   .toast.is-leaving { animation: fadeIn 200ms ease reverse forwards; }
   .detector { transition: opacity 0.2s ease; }
-  .rotor-spin, .radar-sweep, .card-follower-inner { animation: none; }
+  .rotor-spin, .radar-sweep, .card-follower-inner, .path li.is-now::before { animation: none; }
+  .skills-grid > div:hover, .skill:hover, .path li:hover > * { transform: none; }
   .photo-btn img, .row-mark { transition: none; }
   .status-dot::after { animation: none; opacity: 0; }
   .np-eq i, .np.is-new, .end-continue.is-over { animation: none; }
