@@ -1895,8 +1895,16 @@ function initContact() {
 // Last played track, scrobbled to Last.fm. The API key is read-only, so it is safe in the page.
 const LASTFM_USER = "rnlsn326";
 const LASTFM_KEY = "b9e6668daf42647b50200e75d86a5b7d";
-const lastfm = (query) =>
-  fetch(`https://ws.audioscrobbler.com/2.0/?${query}&user=${LASTFM_USER}&api_key=${LASTFM_KEY}&format=json`).then((r) => r.json());
+// Last.fm's error replies (5xx, rate limit) lack CORS headers, so the browser reports them as CORS
+// failures. They are transient: retry with backoff. Error 6 ("not found") is final, so it is not retried.
+const lastfm = (query, tries = 3) =>
+  fetch(`https://ws.audioscrobbler.com/2.0/?${query}&user=${LASTFM_USER}&api_key=${LASTFM_KEY}&format=json`)
+    .then((r) => r.json())
+    .then((d) => { if (d.error) throw d; return d; })
+    .catch((e) => {
+      if (tries <= 1 || e.error === 6) throw e;
+      return new Promise((ok) => setTimeout(ok, (4 - tries) * 2000)).then(() => lastfm(query, tries - 1));
+    });
 // Last.fm serves a grey star placeholder when it has no cover
 const coverOf = (item) => {
   const art = item.image?.[2]?.["#text"]; // 174px, sharp enough for retina at card size
