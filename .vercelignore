@@ -1,0 +1,3 @@
+# Full-size originals stay in git but are never deployed: the site only uses the web/ and pp-web versions
+assets/photography/*.jpg
+assets/pp.JPG
